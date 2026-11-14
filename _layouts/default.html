@@ -1,0 +1,101 @@
+{%- assign S = site.data.site -%}
+{%- assign base = site.url | append: site.baseurl -%}
+{%- assign og_title = page.og_title | default: page.title | default: site.title -%}
+{%- assign og_desc = page.og_desc | default: S.hero.lead -%}
+{%- assign og_img = page.og_image | default: S.hero.og_image -%}
+{%- assign sticky = "Оставить заявку" -%}
+{%- if page.collection == "events" -%}
+  {%- capture ev_dates -%}{% include fmt-range.html a=page.start b=page.end year="y" %}{%- endcapture -%}
+  {%- assign ev_dates = ev_dates | replace: "&nbsp;", " " -%}
+  {%- assign og_title = page.title | append: " · " | append: ev_dates | append: " — Ретриты с Мастером" -%}
+  {%- assign og_desc = page.summary -%}
+  {%- if page.og_image %}{% assign og_img = page.og_image %}{% elsif page.photo and page.photo != "" %}{% assign og_img = page.photo %}{% endif -%}
+  {%- if page.status == "soon" %}{% assign sticky = "Сообщить о датах" %}{% elsif page.start %}{% capture sticky %}Оставить заявку · {% include fmt-range.html a=page.start b=page.end %}{% endcapture %}{% endif -%}
+{%- endif -%}
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>{{ og_title | strip_html }}</title>
+  <meta name="description" content="{{ og_desc | strip_html | escape }}">
+{%- if S.draft or page.noindex %}
+  <meta name="robots" content="noindex, nofollow">
+{%- endif %}
+  <meta name="theme-color" content="#FBFBF9">
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="ru_RU">
+  <meta property="og:site_name" content="{{ S.brand.name }}">
+  <meta property="og:title" content="{{ og_title | strip_html | escape }}">
+  <meta property="og:description" content="{{ og_desc | strip_html | escape }}">
+  <meta property="og:image" content="{{ base }}{{ og_img }}">
+{%- if site.url != "" %}
+  <meta property="og:url" content="{{ base }}{{ page.url | replace: 'index.html', '' }}">
+{%- endif %}
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" href="{{ '/assets/img/logo.svg' | relative_url }}" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap&subset=cyrillic" rel="stylesheet">
+  <link rel="stylesheet" href="{{ '/assets/css/site.css' | relative_url }}">
+{%- assign preload = page.preload -%}{%- if page.collection == "events" and page.photo != "" %}{% assign preload = page.photo_small | default: page.photo %}{% endif -%}
+{%- if preload %}
+  <link rel="preload" as="image" href="{{ preload | relative_url }}" fetchpriority="high">
+{%- endif %}
+  {{ page.head }}
+  <script>document.documentElement.classList.add('js')</script>
+</head>
+<body class="{{ page.body_class }}">
+{%- if S.draft %}
+  <div class="draft" role="note">Черновик для согласования</div>
+{%- endif %}
+  <a class="skip" href="#main">К содержанию</a>
+  <header class="top" data-top>
+    <div class="wrap top-in">
+      <a class="brand" href="{{ '/' | relative_url }}" aria-label="{{ S.brand.name }} — встречи с Мастером, главная">
+        {% include logo.html %}
+        <span class="brand-text">Пространство<br>Эволюции</span>
+      </a>
+      <nav class="nav" aria-label="Разделы">
+        <a href="{{ '/' | relative_url }}#events">Ретриты {{ S.year }}</a>
+        <a href="{{ '/' | relative_url }}#formats">Формат</a>
+        <a href="{{ '/' | relative_url }}#how">Как записаться</a>
+        <a href="{{ '/' | relative_url }}#faq">Вопросы</a>
+      </nav>
+      <a class="btn btn-sm btn-ghost top-cta" href="#apply">Заявка</a>
+    </div>
+  </header>
+
+  <main id="main">
+{{ content }}
+  </main>
+
+  <footer class="foot" id="contacts">
+    <div class="wrap foot-in">
+      <div class="foot-brand">
+        {% include logo.html %}
+        <p><b>{{ S.brand.program }}</b><br>Ретриты с Мастером в {{ S.year }} году</p>
+      </div>
+      <div>
+        <h3>Связаться</h3>
+        <p>{{ S.contacts.name }}<br>
+          <a href="https://t.me/{{ S.contacts.telegram }}" target="_blank" rel="noopener">Telegram @{{ S.contacts.telegram }}</a><br>
+          <a href="mailto:{{ S.contacts.email }}">{{ S.contacts.email }}</a>{% if S.contacts.email2 != "" %}<br><a href="mailto:{{ S.contacts.email2 }}">{{ S.contacts.email2 }}</a>{% endif %}</p>
+      </div>
+      <div>
+        <h3>Пространство Эволюции</h3>
+        <p><a href="{{ S.brand.url }}" target="_blank" rel="noopener">evolution.place</a><br>
+          <a href="{{ S.brand.telegram_channel }}" target="_blank" rel="noopener">Telegram-канал</a></p>
+      </div>
+{%- if S.photo_credits and S.photo_credits.size > 0 %}
+      <p class="foot-credits">Фото: {% for c in S.photo_credits %}{{ c.what }} — <a href="{{ c.url }}" target="_blank" rel="noopener">{{ c.who }}</a>, {{ c.license }}{% unless forloop.last %}; {% endunless %}{% endfor %}. Остальные фото — Пространство Эволюции.</p>
+{%- endif %}
+      <p class="foot-legal">© {{ S.brand.name }}. {% if S.brand.offer_url != "" %}<a href="{{ S.brand.offer_url }}" target="_blank" rel="noopener">Договор-оферта</a> · {% endif %}{% if S.brand.privacy_url != "" %}<a href="{{ S.brand.privacy_url }}" target="_blank" rel="noopener">Политика обработки персональных данных</a>{% endif %}</p>
+    </div>
+  </footer>
+
+  <a class="sticky-cta" href="#apply" data-sticky hidden>{{ sticky }}</a>
+  <script>window.EVO_CONTACTS = { telegram: {{ S.contacts.telegram | jsonify }}, email: {{ S.contacts.email | jsonify }} };</script>
+  <script src="{{ '/assets/js/site.js' | relative_url }}" defer></script>
+</body>
+</html>

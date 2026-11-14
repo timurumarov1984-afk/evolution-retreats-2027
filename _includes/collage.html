@@ -1,0 +1,23 @@
+{%- comment -%} Коллаж «Как это было»: «include collage.html id=yasno-pole-2026». Данные — _data/media.yml. {%- endcomment -%}
+{%- assign cl = site.data.media[include.id] -%}
+{%- if cl -%}
+{%- assign cl_dir = "/assets/media/" | append: cl.folder | append: "/" -%}
+<div class="collage-wrap">
+  <div class="collage-head">
+    <h2>{{ cl.title }}</h2>
+    <p class="sub">{{ cl.caption }}</p>
+  </div>
+  <div class="collage">
+    {%- for it in cl.items %}
+    <figure class="c-item{% if it.size %} c-{{ it.size }}{% endif %}">
+      {%- if it.video %}
+      <video muted loop playsinline preload="none" poster="{{ cl_dir | append: it.video | append: '.webp' | relative_url }}" data-src="{{ cl_dir | append: it.video | append: '.mp4' | relative_url }}" aria-label="{{ it.alt }}" style="object-position: {{ it.pos | default: '50% 50%' }}"></video>
+      {%- else %}
+      <img src="{{ cl_dir | append: it.photo | append: '.webp' | relative_url }}" alt="{{ it.alt }}" loading="lazy" decoding="async" style="object-position: {{ it.pos | default: '50% 50%' }}">
+      {%- endif %}
+      {%- if it.label %}<figcaption class="c-label">{{ it.label }}</figcaption>{% endif %}
+    </figure>
+    {%- endfor %}
+  </div>
+</div>
+{%- endif -%}

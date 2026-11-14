@@ -1,0 +1,7 @@
+{%- comment -%} Цена встречи; при ранних ценах сайт сам выберет текущую ступень по сегодняшней дате. {%- endcomment -%}
+{%- assign pe = include.e -%}{%- assign ptag = include.tag | default: "p" -%}
+{%- if pe.price and pe.price != "" -%}
+<{{ ptag }} class="ev-price" data-price data-base="{{ pe.price }}" data-cur="{{ pe.currency | default: '€' }}"{% if pe.prices and pe.prices.size > 0 %} data-tiers='[{% for t in pe.prices %}{"until":"{{ t.until | date: "%Y-%m-%d" }}","price":{{ t.price }}}{% unless forloop.last %},{% endunless %}{% endfor %}]'{% endif %}><b data-price-now>{% include money.html v=pe.price c=pe.currency %}</b><small data-price-note>{% if include.note %}{{ include.note }}{% endif %}</small></{{ ptag }}>
+{%- else -%}
+<{{ ptag }} class="ev-price"><b class="tbd">Стоимость уточняется</b></{{ ptag }}>
+{%- endif -%}

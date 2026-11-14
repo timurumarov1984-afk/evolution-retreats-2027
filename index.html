@@ -1,0 +1,114 @@
+---
+layout: default
+title: "Эволюция · Ретриты с Мастером в 2027 году — Чиралы, Ясно Поле, Стамбул"
+og_title: "Эволюция · Ретриты с Мастером в 2027 году"
+body_class: home
+---
+{%- assign S = site.data.site -%}
+{%- assign evs = site.events | sort: "start", "last" -%}
+
+<section class="events events-top" id="events" aria-labelledby="events-h">
+  <div class="wrap">
+    <header class="page-head">
+      <p class="label">{{ S.hero.label }}</p>
+      <h1 id="events-h">{% include tx.html s=S.hero.title %}</h1>
+      <p class="lead">{% include tx.html s=S.hero.lead %}</p>
+    </header>
+    <div class="ev-grid" data-ev-list>
+      {%- for e in evs %}
+      {%- if forloop.index <= 2 %}{% assign eager = "y" %}{% else %}{% assign eager = nil %}{% endif %}
+      {% include event-card.html e=e eager=eager %}
+      {%- endfor %}
+    </div>
+    <div class="events-tools">
+      <a class="link-btn" href="{{ '/calendar.ics' | relative_url }}" download>＋ Добавить все встречи в календарь</a>
+      <button class="link-btn" type="button" data-share data-share-title="Эволюция · Ретриты с Мастером в {{ S.year }} году" data-share-text="{{ S.hero.lead | strip_html }}">↗ Поделиться всеми встречами</button>
+    </div>
+  </div>
+</section>
+
+<section class="intro">
+  <div class="wrap narrow">
+    <h2 class="h-accent">{% include tx.html s=S.intro.title %}</h2>
+    {% include md.html s=S.intro.text %}
+  </div>
+</section>
+
+<section class="formats" id="formats" aria-labelledby="formats-h">
+  <div class="wrap">
+    <div class="sec-head">
+      <h2 id="formats-h">{{ S.formats.title }}</h2>
+      <p class="lead">{% include tx.html s=S.formats.lead %}</p>
+    </div>
+    <div class="fmt-grid">
+      {%- for f in S.formats.items %}
+      <article class="fmt">
+        <h3>{{ f.name }}</h3>
+        <p class="fmt-where">{{ f.where }}</p>
+        <ul class="ticks">
+          {%- for x in f.facts %}<li>{% include tx.html s=x %}</li>{% endfor %}
+        </ul>
+        <p class="fmt-for">{% include tx.html s=f.for %}</p>
+      </article>
+      {%- endfor %}
+    </div>
+  </div>
+</section>
+
+<section class="day" aria-labelledby="day-h">
+  <div class="wrap narrow">
+    <p class="label">Как устроен день на ретрите</p>
+    <h2 id="day-h">{{ S.day.title }}</h2>
+    <p class="lead">{% include tx.html s=S.day.text %}</p>
+    <ol class="timeline">
+      {%- for d in S.day.items %}
+      <li><span class="tl-time">{{ d.time }}</span><span class="tl-what"><b>{% include tx.html s=d.what %}</b><small>{% include tx.html s=d.note %}</small></span></li>
+      {%- endfor %}
+    </ol>
+    <div class="note-card">
+      <h3>{{ S.online.title }}</h3>
+      <p>{% include tx.html s=S.online.text %}</p>
+    </div>
+  </div>
+</section>
+
+<section class="how" id="how" aria-labelledby="how-h">
+  <div class="wrap">
+    <div class="sec-head">
+      <h2 id="how-h">Как записаться</h2>
+    </div>
+    <ol class="steps">
+      {%- for s in S.steps %}
+      <li><b>{{ s.title }}</b><span>{% include tx.html s=s.text %}</span></li>
+      {%- endfor %}
+    </ol>
+    <div class="group-band">
+      <div>
+        <h3>{% include tx.html s=S.group.title %}</h3>
+        <p>{% include tx.html s=S.group.text %}</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="faq" id="faq" aria-labelledby="faq-h">
+  <div class="wrap narrow">
+    <h2 id="faq-h">Частые вопросы</h2>
+    {%- for f in S.faq %}
+    <details class="acc"><summary>{% include tx.html s=f.q %}</summary><div class="acc-body">{% include md.html s=f.a %}</div></details>
+    {%- endfor %}
+  </div>
+</section>
+
+{% include apply.html %}
+
+<section class="others" aria-labelledby="others-h">
+  <div class="wrap narrow">
+    <h2 id="others-h" class="h-accent">{% include tx.html s=S.others.title %}</h2>
+    <p>{% include tx.html s=S.others.text %}</p>
+    <p class="others-actions">
+      {%- if S.master_platform_url != "" %}<a class="btn" href="{{ S.master_platform_url }}" target="_blank" rel="noopener">Все встречи на платформе Мастера</a>{% endif %}
+      <a class="btn btn-ghost" href="https://t.me/{{ S.contacts.telegram }}" target="_blank" rel="noopener">Написать @{{ S.contacts.telegram }}</a>
+    </p>
+  </div>
+</section>

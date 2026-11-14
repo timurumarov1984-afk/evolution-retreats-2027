@@ -1,0 +1,6 @@
+{%- comment -%} Дата словами: «include fmt-date.html d=дата year="y"» → 6 марта 2027 {%- endcomment -%}
+{%- if include.d and include.d != "" -%}
+{%- assign fd_mi = include.d | date: "%-m" | minus: 1 -%}
+{%- if include.short == "y" -%}{%- assign fd_months = "янв,фев,мар,апр,мая,июн,июл,авг,сен,окт,ноя,дек" | split: "," -%}{%- else -%}{%- assign fd_months = "января,февраля,марта,апреля,мая,июня,июля,августа,сентября,октября,ноября,декабря" | split: "," -%}{%- endif -%}
+{{ include.d | date: "%-d" }}&nbsp;{{ fd_months[fd_mi] }}{% if include.year == "y" %} {{ include.d | date: "%Y" }}{% endif %}
+{%- endif -%}

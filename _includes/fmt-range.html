@@ -1,0 +1,9 @@
+{%- comment -%} Даты встречи словами: 6–14 марта 2027 · 31 октября – 8 ноября 2027 · «Даты уточняются» {%- endcomment -%}
+{%- if include.a and include.a != "" -%}
+{%- assign fr_ma = include.a | date: "%Y-%m" -%}{%- assign fr_mb = include.b | date: "%Y-%m" -%}
+{%- if fr_ma == fr_mb -%}
+{{ include.a | date: "%-d" }}–{% include fmt-date.html d=include.b year=include.year %}
+{%- else -%}
+{% include fmt-date.html d=include.a short=include.short %} – {% include fmt-date.html d=include.b year=include.year short=include.short %}
+{%- endif -%}
+{%- else -%}Даты уточняются{%- endif -%}

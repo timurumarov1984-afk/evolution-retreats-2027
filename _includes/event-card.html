@@ -1,0 +1,39 @@
+{%- comment -%}
+  Крупная карточка встречи: фото, поверх — что, когда, где; внизу — цена и «Подробнее».
+  Вся карточка — ссылка на страницу встречи.
+  «include event-card.html e=встреча» · target="_blank" — для встраивания на другой сайт · eager="y" — первые карточки грузятся сразу.
+{%- endcomment -%}
+{%- assign ec = include.e -%}
+{%- assign ec_url = ec.url | relative_url -%}
+{%- if ec.kind == "intensive" %}{% assign ec_kind = "Интенсив" %}{% else %}{% assign ec_kind = "Ретрит" %}{% endif -%}
+{%- capture ec_dates -%}{% include fmt-range.html a=ec.start b=ec.end year="y" %}{%- endcapture -%}
+<article class="ev{% if ec.status == 'soon' %} is-soon{% endif %}" id="ev-{{ ec.slug }}" data-event="{{ ec.slug }}" data-end="{% if ec.end %}{{ ec.end | date: '%Y-%m-%d' }}{% endif %}">
+  <a class="ev-card" href="{{ ec_url }}"{% if include.target %} target="{{ include.target }}" rel="noopener"{% endif %}>
+    <span class="ev-photo">
+      {%- if ec.photo and ec.photo != "" %}
+      <img src="{{ ec.photo_small | default: ec.photo | relative_url }}"{% if ec.photo_small %} srcset="{{ ec.photo_small | relative_url }} 800w, {{ ec.photo | relative_url }} 1600w" sizes="(min-width: 1240px) 600px, (min-width: 760px) 50vw, 100vw"{% endif %} alt="{{ ec.title }} — {{ ec.place }}"{% if include.eager %} fetchpriority="high"{% else %} loading="lazy"{% endif %} decoding="async" style="object-position: {{ ec.photo_pos | default: '50% 50%' }}; view-transition-name: ph-{{ ec.slug }}">
+      {%- else %}
+      <span class="ph-none" style="view-transition-name: ph-{{ ec.slug }}">{{ ec.place | split: "," | first }}</span>
+      {%- endif %}
+      <span class="ev-badges">
+        <span class="ev-kind">{{ ec_kind }}{% if ec.days %} · {{ ec.days }} {% if ec.days == 3 %}дня{% else %}дней{% endif %}{% endif %}</span>
+        {% include status.html e=ec tag="span" short="y" %}
+      </span>
+      <span class="ev-over">
+        <span class="ev-season">{{ ec.season }}{% if ec.start %} · {{ ec.start | date: "%Y" }}{% endif %}</span>
+        <span class="ev-title" role="heading" aria-level="3" style="view-transition-name: tt-{{ ec.slug }}">{{ ec.title }}</span>
+        <span class="ev-dates{% if ec.start == nil or ec.start == '' %} tbd{% endif %}">{{ ec_dates }}</span>
+        <span class="ev-place">{{ ec.place }}{% if ec.venue and ec.venue != "" %} · {{ ec.venue }}{% endif %}</span>
+        {%- assign ec_aud = site.data.site.audience[ec.audience] -%}
+        {%- if ec_aud %}<span class="ev-aud ev-aud-{{ ec.audience }}">{{ ec_aud.short }}</span>{% endif %}
+      </span>
+    </span>
+    <span class="ev-foot">
+      <span class="ev-foot-text">
+        {% include price.html e=ec tag="span" %}
+        <span class="ev-format">{{ ec.format }}{% if ec.online %} · можно онлайн{% endif %}</span>
+      </span>
+      <span class="ev-go">{% if ec.status == "soon" %}Узнать даты{% else %}Подробнее{% endif %}<span class="arrow" aria-hidden="true">→</span></span>
+    </span>
+  </a>
+</article>

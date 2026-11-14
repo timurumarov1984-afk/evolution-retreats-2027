@@ -1,0 +1,5 @@
+{%- comment -%} Цена: «include money.html v=850 c="€"» → 850 € · 14000 → 14 000 {%- endcomment -%}
+{%- if include.v and include.v != "" -%}
+{%- assign mv = include.v | append: "" -%}{%- assign ml = mv | size -%}
+{%- if ml > 3 -%}{%- assign mh = ml | minus: 3 -%}{{ mv | slice: 0, mh }}&#8239;{{ mv | slice: mh, 3 }}{%- else -%}{{ mv }}{%- endif -%}&nbsp;{{ include.c }}
+{%- endif -%}

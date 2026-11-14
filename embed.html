@@ -1,0 +1,22 @@
+---
+layout: embed
+title: "Ретриты с Мастером — для встраивания"
+permalink: /embed/
+---
+{%- comment -%}
+  Блок «Ретриты с Мастером» для вставки на другой сайт (например, на Тильду).
+  Код для вставки — в README, раздел «Как поставить встречи на свой сайт».
+  ?show=cirali-spring-2027,yasno-pole-2027 — показать только эти встречи.
+  ?title=0 — без заголовка.
+{%- endcomment -%}
+{%- assign evs = site.events | sort: "start", "last" -%}
+<div class="embed-in" data-embed>
+  <div class="sec-head" data-embed-title>
+    <h2>Ретриты с Мастером в {{ site.data.site.year }} году</h2>
+  </div>
+  <div class="ev-grid" data-ev-list>
+    {%- for e in evs %}
+    {% include event-card.html e=e target="_blank" %}
+    {%- endfor %}
+  </div>
+</div>

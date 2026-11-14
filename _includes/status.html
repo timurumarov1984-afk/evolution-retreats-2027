@@ -1,0 +1,10 @@
+{%- comment -%} Статус записи словами. «include status.html e=встреча» {%- endcomment -%}
+{%- assign st = include.e.status | default: "open" -%}{%- assign stag = include.tag | default: "p" -%}
+<{{ stag }} class="ev-status st-{{ st }}" data-status-text><span class="dot" aria-hidden="true"></span>
+{%- case st -%}
+{%- when "few" -%}{% if include.e.seats_left %}Осталось мест: {{ include.e.seats_left }}{% else %}Осталось мало мест{% endif %}
+{%- when "full" -%}Мест нет{% unless include.short %} · лист ожидания{% endunless %}
+{%- when "soon" -%}Даты скоро{% unless include.short %} · сообщим первыми{% endunless %}
+{%- else -%}Запись открыта
+{%- endcase -%}
+</{{ stag }}>

@@ -1,0 +1,164 @@
+---
+layout: default
+---
+{%- assign S = site.data.site -%}
+{%- assign e = page -%}
+{%- if e.kind == "intensive" %}{% assign kind = "Интенсив" %}{% else %}{% assign kind = "Ретрит" %}{% endif -%}
+{%- capture dates -%}{% include fmt-range.html a=e.start b=e.end year="y" %}{%- endcapture -%}
+{%- assign evs = site.events | sort: "start", "last" -%}
+
+<article class="event" data-event-page="{{ e.slug }}" data-end="{% if e.end %}{{ e.end | date: '%Y-%m-%d' }}{% endif %}">
+  <section class="ev-hero">
+    <div class="wrap ev-hero-in">
+      <figure class="ev-hero-media">
+        {%- if e.photo and e.photo != "" %}
+        <img src="{{ e.photo_small | default: e.photo | relative_url }}"{% if e.photo_small %} srcset="{{ e.photo_small | relative_url }} 800w, {{ e.photo | relative_url }} 1600w" sizes="(min-width: 960px) 46vw, 100vw"{% endif %} alt="{{ e.title }} — {{ e.place }}" fetchpriority="high" style="object-position: {{ e.photo_pos | default: '50% 50%' }}; view-transition-name: ph-{{ e.slug }}">
+        {%- else %}
+        <span class="ph-none" style="view-transition-name: ph-{{ e.slug }}">{{ e.place | split: "," | first }}</span>
+        {%- endif %}
+      </figure>
+      <div class="ev-hero-text">
+        <p class="label">{{ e.season }}{% if e.start %} · {{ e.start | date: "%Y" }}{% endif %} · {{ kind }}</p>
+        <h1 style="view-transition-name: tt-{{ e.slug }}">{{ e.title }}</h1>
+        <p class="ev-hero-dates{% if e.start == nil %} tbd{% endif %}">{{ dates }}</p>
+        <p class="ev-hero-place">{{ e.place }}{% if e.venue and e.venue != "" %} · {{ e.venue }}{% endif %}</p>
+        <p class="lead">{% include tx.html s=e.summary %}</p>
+        <dl class="facts">
+          <div><dt>Формат</dt><dd>{{ e.format }}</dd></div>
+          <div><dt>Стоимость</dt><dd>{% include price.html e=e %}</dd></div>
+          <div><dt>Группа</dt><dd>{{ e.group }}</dd></div>
+          <div><dt>Онлайн</dt><dd>{% if e.online %}Можно присоединиться онлайн{% else %}Только очно{% endif %}</dd></div>
+        </dl>
+        {% include status.html e=e %}
+        {%- assign aud = S.audience[e.audience] -%}
+        {%- if aud %}
+        <p class="aud-note aud-{{ e.audience }}"><b>{{ aud.short }}.</b> {% include tx.html s=aud.text %}</p>
+        {%- endif %}
+        <div class="hero-actions">
+          <a class="btn" href="#apply">{% if e.status == "soon" %}Сообщить о датах{% else %}Оставить заявку{% endif %}</a>
+          <button class="btn btn-ghost" type="button" data-share data-share-title="{{ e.title }} · {{ dates | strip_html | replace: '&nbsp;', ' ' }}" data-share-text="{{ e.summary | strip_html }}">Поделиться</button>
+        </div>
+        {%- if e.start %}
+        <p class="cal-links">В календарь:
+          <a href="https://calendar.google.com/calendar/render?action=TEMPLATE&text={{ e.title | append: ' · Ретриты с Мастером' | url_encode }}&dates={{ e.start | date: '%Y%m%d' }}/{{ e.end | date: '%s' | plus: 86400 | date: '%Y%m%d' }}&location={{ e.place | url_encode }}&details={{ e.summary | append: ' ' | append: site.url | append: site.baseurl | append: e.url | url_encode }}" target="_blank" rel="noopener">Google</a> ·
+          <a href="#" data-ics data-title="{{ e.title }} · Ретриты с Мастером" data-start="{{ e.start | date: '%Y%m%d' }}" data-end="{{ e.end | date: '%s' | plus: 86400 | date: '%Y%m%d' }}" data-place="{{ e.place }}" data-slug="{{ e.slug }}">Apple / Outlook</a>
+        </p>
+        {%- endif %}
+      </div>
+    </div>
+  </section>
+
+  <section class="ev-about">
+    <div class="wrap narrow">
+      <h2>Описание</h2>
+      <div class="prose">{{ content }}</div>
+    </div>
+    {%- if e.collage %}
+    <div class="wrap">{% include collage.html id=e.collage %}</div>
+    {%- endif %}
+    <div class="wrap narrow">
+
+      {%- if e.schedule and e.schedule.size > 0 %}
+      <h2>Как устроен день</h2>
+      <ol class="timeline">
+        {%- for d in e.schedule %}
+        <li><span class="tl-time">{{ d.time }}</span><span class="tl-what"><b>{% include tx.html s=d.what %}</b></span></li>
+        {%- endfor %}
+      </ol>
+      {%- endif %}
+    </div>
+  </section>
+
+  {%- if e.venue_text != "" or e.gallery.size > 0 %}
+  <section class="ev-place">
+    <div class="wrap">
+      <div class="narrow-l">
+        <h2 class="tri">Место проведения</h2>
+        <p class="sub">{{ e.place }}{% if e.venue and e.venue != "" %} · {{ e.venue }}{% endif %}</p>
+        {%- if e.venue_text != "" %}<p>{% include tx.html s=e.venue_text %}</p>{% endif %}
+      </div>
+      {%- if e.gallery.size > 0 %}
+      <div class="gallery" tabindex="0" aria-label="Фото места">
+        {%- for g in e.gallery %}
+        <figure><img src="{{ g.small | default: g.src | relative_url }}" alt="{{ g.alt }}" loading="lazy" decoding="async"><figcaption>{{ g.alt }}</figcaption></figure>
+        {%- endfor %}
+      </div>
+      {%- endif %}
+    </div>
+  </section>
+  {%- endif %}
+
+  {%- if e.stay_text != "" or e.online or e.travel_text != "" %}
+  <section class="ev-more">
+    <div class="wrap narrow">
+      {%- if e.stay_text != "" %}
+      <h2 class="tri">Проживание</h2>
+      {% include md.html s=e.stay_text %}
+      {%- endif %}
+      {%- if e.online %}
+      <h2 class="tri">{{ S.online.title }}</h2>
+      <p>{% include tx.html s=S.online.text %}</p>
+      {%- endif %}
+      {%- if e.travel_text != "" %}
+      <h2 class="tri">Как добраться</h2>
+      {% include md.html s=e.travel_text %}
+      {%- endif %}
+      <div class="note-card">
+        <h3>{% include tx.html s=S.group.title %}</h3>
+        <p>{% include tx.html s=S.group.text %}</p>
+      </div>
+    </div>
+  </section>
+  {%- endif %}
+
+  <section class="faq">
+    <div class="wrap narrow">
+      <h2>Частые вопросы</h2>
+      {%- for f in e.faq %}
+      <details class="acc"><summary>{% include tx.html s=f.q %}</summary><div class="acc-body">{% include md.html s=f.a %}</div></details>
+      {%- endfor %}
+      {%- for f in S.faq %}
+      <details class="acc"><summary>{% include tx.html s=f.q %}</summary><div class="acc-body">{% include md.html s=f.a %}</div></details>
+      {%- endfor %}
+    </div>
+  </section>
+
+  {% include apply.html pick=e.slug %}
+
+  <section class="events more-events" aria-labelledby="more-h">
+    <div class="wrap">
+      <div class="sec-head">
+        <h2 id="more-h">Другие встречи {{ S.year }}</h2>
+      </div>
+      <div class="ev-grid" data-ev-list>
+        {%- for x in evs %}{% if x.slug != e.slug %}
+        {% include event-card.html e=x %}
+        {%- endif %}{% endfor %}
+      </div>
+      <p class="events-tools"><a class="link-btn" href="{{ '/' | relative_url }}#events">← Все ретриты года</a></p>
+    </div>
+  </section>
+</article>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Event",
+  "name": {{ e.title | append: " · Ретриты с Мастером" | jsonify }},
+  "description": {{ e.summary | jsonify }},
+  {%- if e.start %}
+  "startDate": "{{ e.start | date: '%Y-%m-%d' }}",
+  "endDate": "{{ e.end | date: '%Y-%m-%d' }}",
+  {%- endif %}
+  "eventStatus": "https://schema.org/EventScheduled",
+  "eventAttendanceMode": "{% if e.online %}https://schema.org/MixedEventAttendanceMode{% else %}https://schema.org/OfflineEventAttendanceMode{% endif %}",
+  "location": { "@type": "Place", "name": {{ e.venue | default: e.place | jsonify }}, "address": {{ e.place | jsonify }} },
+  {%- if e.photo and e.photo != "" %}
+  "image": "{{ site.url }}{{ site.baseurl }}{{ e.photo }}",
+  {%- endif %}
+  {%- if e.price %}
+  "offers": { "@type": "Offer", "price": "{{ e.price }}", "priceCurrency": "{% if e.currency == '€' %}EUR{% elsif e.currency == '₽' %}RUB{% else %}{{ e.currency }}{% endif %}", "url": "{{ site.url }}{{ site.baseurl }}{{ e.url }}#apply" },
+  {%- endif %}
+  "organizer": { "@type": "Organization", "name": {{ S.brand.name | jsonify }}, "url": "{{ S.brand.url }}" }
+}
+</script>

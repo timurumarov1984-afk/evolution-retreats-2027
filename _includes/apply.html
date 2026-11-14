@@ -1,0 +1,110 @@
+{%- comment -%} Анкета. «include apply.html pick=slug» — на странице встречи эта встреча уже отмечена. {%- endcomment -%}
+{%- assign S = site.data.site -%}
+{%- assign F = S.form -%}
+{%- assign ap_evs = site.events | sort: "start", "last" -%}
+<section class="apply" id="apply" aria-labelledby="apply-h">
+  <div class="wrap narrow">
+    <h2 id="apply-h">{% include tx.html s=F.title %}</h2>
+    <p class="lead">{% include tx.html s=F.lead %}</p>
+
+    <form class="form" id="apply-form" novalidate data-endpoint="{{ F.endpoint }}" data-pick="{{ include.pick }}">
+      <fieldset class="f-events">
+        <legend>Какие встречи вам интересны?</legend>
+        <p class="hint">Можно выбрать несколько.</p>
+        {%- for ap_e in ap_evs %}
+        {%- capture ap_d -%}{% include fmt-range.html a=ap_e.start b=ap_e.end year="y" %}{%- endcapture %}
+        <label class="pick" data-event="{{ ap_e.slug }}" data-end="{% if ap_e.end %}{{ ap_e.end | date: '%Y-%m-%d' }}{% endif %}" data-online="{% if ap_e.online %}1{% endif %}" data-audience="{{ ap_e.audience }}">
+          <input type="checkbox" name="events" value="{{ ap_e.title }} · {{ ap_d | strip_html | replace: '&nbsp;', ' ' }}" data-slug="{{ ap_e.slug }}">
+          <span class="pick-box" aria-hidden="true"></span>
+          <span class="pick-text"><b>{{ ap_e.title }}</b><small>{{ ap_d }}{% if ap_e.status == "soon" %} · сообщим о датах{% endif %}{% if ap_e.audience == "evolution" %} · для выпускников Эволюции{% endif %}</small></span>
+        </label>
+        {%- endfor %}
+        <p class="f-err" data-err="events" hidden>Отметьте хотя бы одну встречу.</p>
+      </fieldset>
+
+      <label class="field">
+        <span>Как вас зовут?</span>
+        <input name="name" autocomplete="name" required>
+        <span class="f-err" data-err="name" hidden>Напишите, как к вам обращаться.</span>
+      </label>
+
+      <fieldset class="field">
+        <legend>Как вам удобно, чтобы с вами связались?</legend>
+        <div class="chips">
+          {%- for w in F.contact_ways %}
+          <label class="chip"><input type="radio" name="way" value="{{ w }}"{% if forloop.first %} checked{% endif %}><span>{{ w }}</span></label>
+          {%- endfor %}
+        </div>
+      </fieldset>
+
+      <label class="field">
+        <span data-contact-label>Ник в Telegram</span>
+        <input name="contact" required autocomplete="off" placeholder="@username">
+        <span class="f-err" data-err="contact" hidden>Оставьте контакт, чтобы мы могли ответить.</span>
+      </label>
+
+      <fieldset class="field" data-online-field hidden>
+        <legend>Как вы хотите участвовать в ретрите?</legend>
+        <div class="chips">
+          <label class="chip"><input type="radio" name="mode" value="Очно" checked><span>Очно</span></label>
+          <label class="chip"><input type="radio" name="mode" value="Онлайн"><span>Онлайн</span></label>
+          <label class="chip"><input type="radio" name="mode" value="Пока не знаю"><span>Пока не знаю</span></label>
+        </div>
+      </fieldset>
+
+      <fieldset class="field">
+        <legend>Вы проходили программу «Эволюция»?</legend>
+        <div class="chips">
+          <label class="chip"><input type="radio" name="evo" value="Да"><span>Да</span></label>
+          <label class="chip"><input type="radio" name="evo" value="Нет"><span>Нет</span></label>
+        </div>
+        <p class="hint evo-hint" data-evo-hint hidden>Ретриты в Чиралы — в основном для выпускников Эволюции. Всё равно отправьте заявку: Наталья свяжется с вами и подскажет, с чего лучше начать — например, с интенсива, он открыт для всех.</p>
+      </fieldset>
+
+      <fieldset class="field">
+        <legend>Вы уже были на встречах с Мастером?</legend>
+        <div class="chips">
+          <label class="chip"><input type="radio" name="before" value="Да"><span>Да</span></label>
+          <label class="chip"><input type="radio" name="before" value="Будет впервые"><span>Будет впервые</span></label>
+        </div>
+      </fieldset>
+
+      <label class="check">
+        <input type="checkbox" name="plus1" value="Да">
+        <span class="pick-box" aria-hidden="true"></span>
+        <span>Приеду с +1</span>
+      </label>
+
+      <label class="field">
+        <span>Откуда вы узнали о встречах?</span>
+        <select name="source">
+          <option value="">— выберите —</option>
+          {%- for s in F.sources %}<option>{{ s }}</option>{% endfor %}
+        </select>
+      </label>
+
+      <label class="field">
+        <span>Вопрос или комментарий <small>(необязательно)</small></span>
+        <textarea name="comment" rows="3"></textarea>
+      </label>
+
+      <label class="hp" aria-hidden="true">Не заполняйте это поле <input name="website" tabindex="-1" autocomplete="off"></label>
+
+      <button class="btn btn-wide" type="submit" data-submit>Отправить заявку</button>
+      <p class="consent">Нажимая на кнопку, вы даёте согласие на обработку своих персональных данных{% if S.brand.privacy_url != "" %} в соответствии с <a href="{{ S.brand.privacy_url }}" target="_blank" rel="noopener">политикой</a>{% endif %}.</p>
+      <div class="f-status" role="status" aria-live="polite" hidden></div>
+    </form>
+
+    <div class="f-done" id="apply-done" hidden tabindex="-1">
+      <p class="done-mark" aria-hidden="true">✓</p>
+      <h3>Спасибо! Заявка получена</h3>
+      <p>Мы свяжемся с вами в ближайшие дни. Что будет дальше:</p>
+      <ol class="steps steps-compact">
+        {%- for s in S.steps offset: 1 %}
+        <li><b>{{ s.title }}</b><span>{% include tx.html s=s.text %}</span></li>
+        {%- endfor %}
+      </ol>
+      <p class="muted">Если появятся вопросы — напишите {{ S.contacts.name }}: <a href="https://t.me/{{ S.contacts.telegram }}" target="_blank" rel="noopener">Telegram @{{ S.contacts.telegram }}</a> или <a href="mailto:{{ S.contacts.email }}">{{ S.contacts.email }}</a>.</p>
+    </div>
+  </div>
+</section>

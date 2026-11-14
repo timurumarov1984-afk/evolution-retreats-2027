@@ -1,0 +1,5 @@
+{%- comment -%} Абзацы текста (Markdown: абзацы, списки "- ", **жирный**, [ссылки](адрес)). «include md.html s=текст» {%- endcomment -%}
+{%- if include.s and include.s != "" -%}
+{%- capture md_t -%}{% include tx.html s=include.s md="y" %}{%- endcapture -%}
+{{ md_t | markdownify | replace: '<a href="http', '<a target="_blank" rel="noopener" href="http' }}
+{%- endif -%}

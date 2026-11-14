@@ -1,0 +1,33 @@
+# Настройки сборки. Обычно их не трогают.
+# Всё общее содержание — в _data/site.yml, встречи — в папке _events (одна встреча = один файл).
+title: "Эволюция · Ретриты с Мастером"
+url: "https://timurumarov1984-afk.github.io"   # адрес сайта без слеша в конце — нужен для превью ссылок. Свой домен: "https://master.evolution.place"
+baseurl: "/evolution-retreats-2027"            # подпапка сайта на GitHub Pages; со своим доменом — пусто ""
+lang: ru
+timezone: Europe/Moscow
+
+collections:
+  events:
+    output: true
+    permalink: /:name/
+
+defaults:
+  - scope: { path: "", type: events }
+    values: { layout: event }
+
+markdown: kramdown
+kramdown:
+  input: GFM
+  hard_wrap: false
+  smart_quotes: ["apos", "apos", "quot", "quot"]
+
+exclude:
+  - README.md
+  - "Предложение — сайт Эволюции 2027 и воронка.md"
+  - apps-script
+  - "assets/media/СОСТАВ.md"
+  - tools
+  - Gemfile
+  - Gemfile.lock
+  - vendor
+  - node_modules
