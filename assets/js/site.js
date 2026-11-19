@@ -20,6 +20,19 @@
     var chip = $('[data-chip="' + card.dataset.event + '"]'); if (chip) chip.classList.add('is-past');
   });
   $$('.pick[data-end]').forEach(function (p) { if (isPast(p.dataset.end)) p.classList.add('is-past'); });
+  /* 1а. Широкая первая карточка (нечётное число встреч): ей нужно фото побольше.
+     После перестановки прошедших встреч или отбора ?show= первой может стать другая карточка. */
+  var SIZES_WIDE = '(min-width: 1304px) 1176px, (min-width: 760px) calc(100vw - 64px), 100vw', SIZES_CARD = '(min-width: 1240px) 600px, (min-width: 760px) 50vw, 100vw';
+  function syncWide() {
+    $$('.events-top [data-ev-list], .embed [data-ev-list]').forEach(function (list) {
+      var cards = $$('.ev', list), odd = cards.length % 2 === 1;
+      cards.forEach(function (c, i) {
+        var im = $('.ev-photo img[srcset]', c), want = odd && i === 0 ? SIZES_WIDE : SIZES_CARD;
+        if (im && im.sizes !== want) im.sizes = want;
+      });
+    });
+  }
+  syncWide();
   var page = $('[data-event-page]');
   if (page && isPast(page.dataset.end)) {
     $$('.ev-hero [data-status-text]').forEach(function (st) { st.className = 'ev-status st-past'; st.innerHTML = '<span class="dot" aria-hidden="true"></span>Встреча прошла'; });
@@ -217,6 +230,7 @@
       if (show) { var keep = show.split(','); $$('.ev', embed).forEach(function (c) { if (keep.indexOf(c.dataset.event) < 0) c.remove(); }); }
       if (sp2.get('title') === '0') $('[data-embed-title]', embed).remove();
     } catch (e) {}
+    syncWide();
     var post = function () { try { parent.postMessage({ evoEmbedHeight: Math.ceil(document.documentElement.scrollHeight) }, '*'); } catch (e) {} };
     window.addEventListener('load', post); window.addEventListener('resize', post);
     if ('ResizeObserver' in window) new ResizeObserver(post).observe(embed);

@@ -11,6 +11,9 @@
  *
  * Итоги: каждый вечер в 20:00 (если были заявки) и в понедельник утром — сколько человек записалось на каждую встречу.
  * В любой момент: написать боту «итоги» (или нажать /itogi в меню бота).
+ *
+ * Таблица файлом Excel: написать боту «таблица» (или нажать /excel) — бот пришлёт все заявки одним файлом .xlsx.
+ * Тот же файл приходит сам каждый понедельник: в Telegram и на почту.
  */
 
 /* ======================= НАСТРОЙКИ: заполнить один раз ======================= */
@@ -249,7 +252,44 @@ function telegramAll_(text) {
   return n;
 }
 
-/* Раз в 5 минут: кто нажал «Начать» — подключить; кто написал «итоги» — ответить. */
+/* ------------------------------ таблица файлом Excel ------------------------------ */
+/* Вся таблица заявок одним файлом .xlsx — то же, что «Файл → Скачать → Microsoft Excel» в Google Таблицах */
+function excelBlob_() {
+  var ss = SpreadsheetApp.openByUrl(CONFIG.SHEET_URL);
+  SpreadsheetApp.flush();
+  DriveApp.getFileById(ss.getId()); // с этой строкой Google разрешает скрипту скачивать таблицу файлом
+  var res = UrlFetchApp.fetch('https://docs.google.com/spreadsheets/d/' + ss.getId() + '/export?format=xlsx', {
+    headers: { Authorization: 'Bearer ' + ScriptApp.getOAuthToken() }, muteHttpExceptions: true
+  });
+  if (res.getResponseCode() !== 200) throw new Error('Google не отдал файл (код ' + res.getResponseCode() + ')');
+  // Имя файла латиницей: русские буквы в имени Telegram может получить испорченными
+  return res.getBlob()
+    .setContentType('application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+    .setName('Zayavki_' + Utilities.formatDate(new Date(), CONFIG.TIMEZONE, 'dd-MM-yyyy') + '.xlsx');
+}
+
+/* Подпись к файлу: на какой момент и сколько заявок (без тестовых) */
+function excelCaption_() {
+  var n = rows_().length;
+  return 'Таблица заявок · ' + CONFIG.TITLE + '\n' + Utilities.formatDate(new Date(), CONFIG.TIMEZONE, 'dd.MM.yyyy, HH:mm') + ' · ' + n + ' ' + plural_(n, 'заявка', 'заявки', 'заявок');
+}
+
+function telegramFile_(chatId, blob, caption) {
+  if (!CONFIG.TELEGRAM_TOKEN) throw new Error('не указан TELEGRAM_TOKEN');
+  var res = UrlFetchApp.fetch('https://api.telegram.org/bot' + CONFIG.TELEGRAM_TOKEN + '/sendDocument', {
+    method: 'post', payload: { chat_id: String(chatId), caption: caption || '', document: blob }, muteHttpExceptions: true
+  });
+  try { return JSON.parse(res.getContentText()).ok === true; } catch (err) { return false; }
+}
+/* Отправить файл всем подключённым; вернуть, скольким дошло */
+function telegramFileAll_(blob, caption) {
+  if (!CONFIG.TELEGRAM_TOKEN) return 0;
+  var chats = chats_(), n = 0;
+  Object.keys(chats).forEach(function (u) { if (telegramFile_(chats[u], blob, caption)) n++; });
+  return n;
+}
+
+/* Раз в 5 минут: кто нажал «Начать» — подключить; кто написал «итоги» или «таблица» — ответить. */
 function checkBot() {
   if (!CONFIG.TELEGRAM_TOKEN) return;
   var offset = +(props_().getProperty('TG_OFFSET') || 0);
@@ -266,9 +306,16 @@ function checkBot() {
     }
     if (chats[who] !== m.chat.id) {
       chats[who] = m.chat.id; changed = true;
-      telegram_(m.chat.id, 'Готово! Сюда будут приходить заявки с сайта «' + esc_(CONFIG.TITLE) + '».\nНапишите «итоги» — пришлю, сколько человек записалось на каждую встречу.');
+      telegram_(m.chat.id, 'Готово! Сюда будут приходить заявки с сайта «' + esc_(CONFIG.TITLE) + '».\nНапишите «итоги» — пришлю, сколько человек записалось на каждую встречу.\nНапишите «таблица» — пришлю все заявки файлом Excel.');
     }
     if (/^\/?(itogi|итоги|stats)(?=$|\s|@)/.test(text)) telegram_(m.chat.id, summaryText_('Итоги').text);
+    if (/^\/?(excel|xlsx|эксель|ексель|таблица|таблицу|файл)(?=$|\s|@)/.test(text)) {
+      try {
+        if (!telegramFile_(m.chat.id, excelBlob_(), excelCaption_())) telegram_(m.chat.id, 'Файл собран, но Telegram его не принял. Попробуйте ещё раз через несколько минут.');
+      } catch (err) {
+        telegram_(m.chat.id, 'Не получилось собрать таблицу файлом: ' + esc_(err) + '\nСама таблица на месте: ' + esc_(CONFIG.SHEET_URL));
+      }
+    }
   });
   if (changed) props_().setProperty('TG_CHATS', JSON.stringify(chats));
   props_().setProperty('TG_OFFSET', String(offset));
@@ -279,8 +326,20 @@ function dailySummary() {
   var s = summaryText_('Итоги дня');
   if (s.fresh > 0) telegramAll_(s.text);
 }
-/* Понедельник утром: итоги недели — всегда */
-function weeklySummary() { telegramAll_(summaryText_('Итоги на понедельник').text); }
+/* Понедельник утром: итоги недели — всегда; следом вся таблица файлом Excel — в Telegram и на почту */
+function weeklySummary() {
+  telegramAll_(summaryText_('Итоги на понедельник').text);
+  try {
+    var blob = excelBlob_(), caption = excelCaption_();
+    telegramFileAll_(blob, caption);
+    if (CONFIG.NOTIFY_EMAIL) MailApp.sendEmail({
+      to: CONFIG.NOTIFY_EMAIL, subject: 'Таблица заявок · ' + CONFIG.TITLE,
+      body: caption + '\n\nВсе заявки — в приложенном файле, он открывается в Excel.', attachments: [blob]
+    });
+  } catch (err) {
+    telegramAll_('⚠ Таблицу файлом Excel собрать не получилось: ' + esc_(err));
+  }
+}
 
 /* ------------------------------ письмо ------------------------------ */
 function mail_(r, saved, note) {
@@ -315,7 +374,10 @@ function setup() {
   ScriptApp.newTrigger('dailySummary').timeBased().atHour(CONFIG.SUMMARY_HOUR).everyDays(1).inTimezone(CONFIG.TIMEZONE).create();
   ScriptApp.newTrigger('weeklySummary').timeBased().onWeekDay(ScriptApp.WeekDay.MONDAY).atHour(10).inTimezone(CONFIG.TIMEZONE).create();
   if (CONFIG.TELEGRAM_TOKEN) {
-    tg_('setMyCommands', { commands: [{ command: 'itogi', description: 'Сколько человек записалось на каждую встречу' }] });
+    tg_('setMyCommands', { commands: [
+      { command: 'itogi', description: 'Сколько человек записалось на каждую встречу' },
+      { command: 'excel', description: 'Все заявки файлом Excel' }
+    ] });
     checkBot();
     var chats = chats_(), missing = allowed_().filter(function (u) { return !chats[u]; });
     telegramAll_('Проверка связи: бот заявок «' + esc_(CONFIG.TITLE) + '» подключён.');
@@ -332,4 +394,9 @@ function test() {
     meta: { page: 'test', utm: '' }
   }) } });
   Logger.log(r.getContent());
+}
+
+/** Пробная выгрузка — всем подключённым придёт таблица заявок файлом Excel. */
+function testExcel() {
+  Logger.log('Файл Excel получили: ' + telegramFileAll_(excelBlob_(), excelCaption_()));
 }

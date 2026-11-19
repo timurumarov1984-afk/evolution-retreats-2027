@@ -1,7 +1,8 @@
 {%- comment -%}
   Крупная карточка встречи: фото, поверх — что, когда, где; внизу — цена и «Подробнее».
   Вся карточка — ссылка на страницу встречи.
-  «include event-card.html e=встреча» · target="_blank" — для встраивания на другой сайт · eager="y" — первые карточки грузятся сразу.
+  «include event-card.html e=встреча» · target="_blank" — для встраивания на другой сайт · eager="y" — первые карточки грузятся сразу ·
+  wide="y" — широкая карточка на весь ряд (ей нужно фото побольше) · level=2 — уровень заголовка (по умолчанию 3).
 {%- endcomment -%}
 {%- assign ec = include.e -%}
 {%- assign ec_url = ec.url | relative_url -%}
@@ -11,7 +12,7 @@
   <a class="ev-card" href="{{ ec_url }}"{% if include.target %} target="{{ include.target }}" rel="noopener"{% endif %}>
     <span class="ev-photo">
       {%- if ec.photo and ec.photo != "" %}
-      <img src="{{ ec.photo_small | default: ec.photo | relative_url }}"{% if ec.photo_small %} srcset="{{ ec.photo_small | relative_url }} 800w, {{ ec.photo | relative_url }} 1600w" sizes="(min-width: 1240px) 600px, (min-width: 760px) 50vw, 100vw"{% endif %} alt="{{ ec.title }} — {{ ec.place }}"{% if include.eager %} fetchpriority="high"{% else %} loading="lazy"{% endif %} decoding="async" style="object-position: {{ ec.photo_pos | default: '50% 50%' }}; view-transition-name: ph-{{ ec.slug }}">
+      <img src="{{ ec.photo_small | default: ec.photo | relative_url }}"{% if ec.photo_small %} srcset="{{ ec.photo_small | relative_url }} 800w, {{ ec.photo | relative_url }} 1600w" sizes="{% if include.wide %}(min-width: 1304px) 1176px, (min-width: 760px) calc(100vw - 64px), 100vw{% else %}(min-width: 1240px) 600px, (min-width: 760px) 50vw, 100vw{% endif %}"{% endif %} alt="{{ ec.title }} — {{ ec.place }}"{% if include.eager %} fetchpriority="high"{% else %} loading="lazy"{% endif %} decoding="async" style="object-position: {{ ec.photo_pos | default: '50% 50%' }}; view-transition-name: ph-{{ ec.slug }}">
       {%- else %}
       <span class="ph-none" style="view-transition-name: ph-{{ ec.slug }}">{{ ec.place | split: "," | first }}</span>
       {%- endif %}
@@ -21,7 +22,7 @@
       </span>
       <span class="ev-over">
         <span class="ev-season">{{ ec.season }}{% if ec.start %} · {{ ec.start | date: "%Y" }}{% endif %}</span>
-        <span class="ev-title" role="heading" aria-level="3" style="view-transition-name: tt-{{ ec.slug }}">{{ ec.title }}</span>
+        <span class="ev-title" role="heading" aria-level="{{ include.level | default: 3 }}" style="view-transition-name: tt-{{ ec.slug }}">{{ ec.title }}</span>
         <span class="ev-dates{% if ec.start == nil or ec.start == '' %} tbd{% endif %}">{{ ec_dates }}</span>
         <span class="ev-place">{{ ec.place }}{% if ec.venue and ec.venue != "" %} · {{ ec.venue }}{% endif %}</span>
         {%- assign ec_aud = site.data.site.audience[ec.audience] -%}
@@ -31,7 +32,7 @@
     <span class="ev-foot">
       <span class="ev-foot-text">
         {% include price.html e=ec tag="span" %}
-        <span class="ev-format">{{ ec.format }}{% if ec.online %} · можно онлайн{% endif %}</span>
+        <span class="ev-format">{% include tx.html s=ec.format %}{% if ec.online %} · можно онлайн{% endif %}</span>
       </span>
       <span class="ev-go">{% if ec.status == "soon" %}Узнать даты{% else %}Подробнее{% endif %}<span class="arrow" aria-hidden="true">→</span></span>
     </span>

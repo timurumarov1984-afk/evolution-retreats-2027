@@ -24,10 +24,10 @@ layout: default
         <p class="ev-hero-place">{{ e.place }}{% if e.venue and e.venue != "" %} · {{ e.venue }}{% endif %}</p>
         <p class="lead">{% include tx.html s=e.summary %}</p>
         <dl class="facts">
-          <div><dt>Формат</dt><dd>{{ e.format }}</dd></div>
+          <div><dt>Формат</dt><dd>{% include tx.html s=e.format %}</dd></div>
           <div><dt>Стоимость</dt><dd>{% include price.html e=e %}</dd></div>
-          <div><dt>Группа</dt><dd>{{ e.group }}</dd></div>
-          <div><dt>Онлайн</dt><dd>{% if e.online %}Можно присоединиться онлайн{% else %}Только очно{% endif %}</dd></div>
+          <div><dt>Группа</dt><dd>{{ e.group | remove_first: "Группа " | capitalize }}</dd></div>
+          <div><dt>Участие</dt><dd>{% if e.online %}Очно или онлайн{% else %}Только очно{% endif %}</dd></div>
         </dl>
         {% include status.html e=e %}
         {%- assign aud = S.audience[e.audience] -%}
@@ -60,7 +60,8 @@ layout: default
 
       {%- if e.schedule and e.schedule.size > 0 %}
       <h2>Как устроен день</h2>
-      <ol class="timeline">
+      {%- assign tl_first = e.schedule | first -%}{%- assign tl_len = tl_first.time | size -%}
+      <ol class="timeline{% if tl_len > 11 %} timeline-days{% endif %}">
         {%- for d in e.schedule %}
         <li><span class="tl-time">{{ d.time }}</span><span class="tl-what"><b>{% include tx.html s=d.what %}</b></span></li>
         {%- endfor %}
@@ -70,7 +71,7 @@ layout: default
   </section>
 
   {%- if e.venue_text != "" or e.gallery.size > 0 %}
-  <section class="ev-place">
+  <section class="ev-venue">
     <div class="wrap">
       <div class="narrow-l">
         <h2 class="tri">Место проведения</h2>

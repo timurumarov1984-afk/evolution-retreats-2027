@@ -6,6 +6,7 @@ body_class: home
 ---
 {%- assign S = site.data.site -%}
 {%- assign evs = site.events | sort: "start", "last" -%}
+{%- assign evs_odd = evs.size | modulo: 2 -%}
 
 <section class="events events-top" id="events" aria-labelledby="events-h">
   <div class="wrap">
@@ -17,7 +18,8 @@ body_class: home
     <div class="ev-grid" data-ev-list>
       {%- for e in evs %}
       {%- if forloop.index <= 2 %}{% assign eager = "y" %}{% else %}{% assign eager = nil %}{% endif %}
-      {% include event-card.html e=e eager=eager %}
+      {%- if forloop.first and evs_odd == 1 %}{% assign wide = "y" %}{% else %}{% assign wide = nil %}{% endif %}
+      {% include event-card.html e=e eager=eager wide=wide level=2 %}
       {%- endfor %}
     </div>
     <div class="events-tools">

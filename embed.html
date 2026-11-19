@@ -10,13 +10,15 @@ permalink: /embed/
   ?title=0 — без заголовка.
 {%- endcomment -%}
 {%- assign evs = site.events | sort: "start", "last" -%}
+{%- assign evs_odd = evs.size | modulo: 2 -%}
 <div class="embed-in" data-embed>
   <div class="sec-head" data-embed-title>
     <h2>Ретриты с Мастером в {{ site.data.site.year }} году</h2>
   </div>
   <div class="ev-grid" data-ev-list>
     {%- for e in evs %}
-    {% include event-card.html e=e target="_blank" %}
+    {%- if forloop.first and evs_odd == 1 %}{% assign wide = "y" %}{% else %}{% assign wide = nil %}{% endif %}
+    {% include event-card.html e=e target="_blank" wide=wide %}
     {%- endfor %}
   </div>
 </div>

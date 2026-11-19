@@ -1,0 +1,19 @@
+---
+layout: default
+title: "Страница не найдена — Ретриты с Мастером"
+permalink: /404.html
+noindex: true
+no_apply: true
+---
+{%- assign S = site.data.site -%}
+<section class="notfound">
+  <div class="wrap narrow">
+    <p class="label">Ошибка 404</p>
+    <h1>Такой страницы нет</h1>
+    <p class="lead">Возможно, ссылка устарела или встреча переехала на другой адрес. Все встречи с Мастером в {{ S.year }} году — на главной.</p>
+    <p class="hero-actions">
+      <a class="btn" href="{{ '/' | relative_url }}">Все встречи года</a>
+      <a class="btn btn-ghost" href="https://t.me/{{ S.contacts.telegram }}" target="_blank" rel="noopener">Написать @{{ S.contacts.telegram }}</a>
+    </p>
+  </div>
+</section>
