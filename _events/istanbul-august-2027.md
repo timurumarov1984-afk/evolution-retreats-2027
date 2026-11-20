@@ -19,27 +19,29 @@ online: false
 group: "Группа до 40 человек"
 audience: all                 # all — открыт для всех · evolution — в основном для прошедших «Эволюцию»
 
-summary: "Три дня практики с Мастером в летнем Стамбуле: вечерний Босфор, тишина практики и встреча с собой."
+summary: "Ретрит выходного дня с Мастером в Стамбуле. Интенсивное погружение в практику."
 
-photo: "/assets/media/istanbul/suleymaniye-night.webp"
-photo_small: "/assets/media/istanbul/suleymaniye-night-800.webp"
-photo_pos: "46% 50%"
+photo: "/assets/media/istanbul/eskihisar-sea.webp"
+photo_small: "/assets/media/istanbul/eskihisar-sea-800.webp"
+photo_pos: "50% 45%"
 og_image: "/assets/img/og-istanbul-august.jpg"
 gallery:
-  - { src: "/assets/media/istanbul/suleymaniye-night.webp", small: "/assets/media/istanbul/suleymaniye-night-800.webp", alt: "Мечеть Сулеймание вечером, вид с Золотого Рога" }
-  - { src: "/assets/media/istanbul/ferry.webp", small: "/assets/media/istanbul/ferry-800.webp", alt: "Паром на Босфоре на закате" }
-  - { src: "/assets/media/istanbul/blue-mosque.webp", small: "/assets/media/istanbul/blue-mosque-800.webp", alt: "Двор Голубой мечети в сумерках" }
+  - { src: "/assets/media/istanbul/eskihisar-sea.webp", small: "/assets/media/istanbul/eskihisar-sea-800.webp", alt: "Мраморное море у Эскихисара, Гебзе" }
+  - { src: "/assets/media/istanbul/tuzla-alley.webp", small: "/assets/media/istanbul/tuzla-alley-800.webp", alt: "Аллея вдоль моря в Тузле" }
+  - { src: "/assets/media/istanbul/pines-sunset.webp", small: "/assets/media/istanbul/pines-sunset-800.webp", alt: "Закат над морем сквозь сосны" }
 
+schedule_title: "Расписание"
 schedule:
-  - { time: "Пятница, 6 августа", what: "10:00–18:00 — практика с Мастером" }
-  - { time: "Суббота, 7 августа", what: "10:00–18:00 — практика с Мастером" }
-  - { time: "Воскресенье, 8 августа", what: "10:00–15:00 — практика с Мастером" }
+  - { time: "Пятница, 6 августа", what: "6 часов практики" }
+  - { time: "Суббота, 7 августа", what: "6 часов практики" }
+  - { time: "Воскресенье, 8 августа", what: "3 часа практики" }
+schedule_note: "Точное время будет согласовано позднее. Между сессиями предусмотрены перерыв на обед и кофе-брейки."
 
 venue_text: "Место проведения уточняется — сообщим его всем, кто оставит заявку."
 stay_text: ""
 travel_text: ""
 faq: []
 ---
-Интенсив выходного дня с погружением: три дня практики под руководством Мастера в летнем Стамбуле.
+Трёхдневный интенсив с Мастером в Стамбуле. 2,5 дня глубокого погружения в медитацию и внутреннее исследование, возможность полностью сосредоточиться на практике, оставив за пределами ретрита привычные дела и заботы. В тихом пространстве с видом на море, вдали от городского шума, мы создаём условия для непрерывной практики в присутствии Мастера. Интенсив проходит только очно, без онлайн-трансляций и записей.
 
-Для кого-то этот интенсив станет первым опытом знакомства с подходом Мастера и возможностью безопасно войти в практику. Для практикующих с Мастером — возможностью глубокого погружения в середине года, между весенними и осенними Чиралы.
+Для новых участников это возможность познакомиться с подходом Мастера через непосредственный опыт практики. Для тех, кто уже практикует с Мастером, — возможность углубить этот опыт в интенсивном формате.

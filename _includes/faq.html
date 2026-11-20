@@ -1,0 +1,18 @@
+{%- comment -%}
+  Общие вопросы из _data/site.yml → faq.
+  «include faq.html kind="intensive"» (или "retreat") — на странице встречи: вопрос и ответ для этого формата.
+  «include faq.html» — на главной: если ответы для ретрита и интенсива разные, показываются оба, с подписями.
+{%- endcomment -%}
+{%- assign fq_S = site.data.site -%}
+{%- for fq in fq_S.faq %}
+{%- assign fq_q = fq.q -%}{%- assign fq_a = fq.a -%}
+{%- if include.kind -%}
+  {%- assign fq_v = fq[include.kind] -%}
+  {%- if fq_v -%}{%- assign fq_q = fq_v.q | default: fq.q -%}{%- assign fq_a = fq_v.a | default: fq.a -%}{%- endif -%}
+{%- elsif fq.retreat and fq.intensive -%}
+  {%- capture fq_a -%}**{{ fq_S.faq_labels.retreat }}.** {{ fq.retreat.a }}
+
+**{{ fq_S.faq_labels.intensive }}.** {{ fq.intensive.a }}{%- endcapture -%}
+{%- endif %}
+<details class="acc"><summary>{% include tx.html s=fq_q %}</summary><div class="acc-body">{% include md.html s=fq_a %}</div></details>
+{%- endfor %}

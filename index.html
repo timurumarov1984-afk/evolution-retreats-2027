@@ -96,9 +96,7 @@ body_class: home
 <section class="faq" id="faq" aria-labelledby="faq-h">
   <div class="wrap narrow">
     <h2 id="faq-h">Частые вопросы</h2>
-    {%- for f in S.faq %}
-    <details class="acc"><summary>{% include tx.html s=f.q %}</summary><div class="acc-body">{% include md.html s=f.a %}</div></details>
-    {%- endfor %}
+    {% include faq.html %}
   </div>
 </section>
 

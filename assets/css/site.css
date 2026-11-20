@@ -191,6 +191,7 @@ section { padding: 56px 0; }
 .tl-time { font-weight: 500; color: var(--violet); font-variant-numeric: tabular-nums; }
 .tl-what b { display: block; font-weight: 400; }
 .timeline-days li { grid-template-columns: 1fr; gap: 2px; }
+.tl-note { margin: -8px 0 0; color: var(--ink-2); }
 .tl-what small { display: block; color: var(--muted); font-size: .92rem; line-height: 1.45; margin-top: 2px; }
 .note-card { margin-top: 26px; padding: 20px 22px; border-radius: var(--r); background: rgba(255, 255, 255, .78); border: 1px solid var(--line); }
 .note-card h3 { color: var(--violet); margin-bottom: 6px; }
@@ -303,6 +304,7 @@ section { padding: 56px 0; }
 .ev-hero h1 { margin-bottom: .2em; }
 .ev-hero-dates { margin: 0 0 4px; font-size: clamp(1.4rem, 5.6vw, 2rem); font-weight: 400; color: var(--violet); }
 .ev-hero-dates.tbd { color: var(--muted); }
+.ev-hero-wd { display: inline-block; font-size: 1rem; color: var(--ink-2); white-space: nowrap; }
 .ev-hero-place { color: var(--ink-2); margin-bottom: 14px; }
 .facts { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; margin: 22px 0 16px; border-radius: var(--r-s); overflow: hidden; background: var(--line); border: 1px solid var(--line); }
 .facts > div { background: var(--white); padding: 12px 14px; }

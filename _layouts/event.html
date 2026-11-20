@@ -20,7 +20,7 @@ layout: default
       <div class="ev-hero-text">
         <p class="label">{{ e.season }}{% if e.start %} · {{ e.start | date: "%Y" }}{% endif %} · {{ kind }}</p>
         <h1 style="view-transition-name: tt-{{ e.slug }}">{{ e.title }}</h1>
-        <p class="ev-hero-dates{% if e.start == nil %} tbd{% endif %}">{{ dates }}</p>
+        <p class="ev-hero-dates{% if e.start == nil %} tbd{% endif %}">{{ dates }}{% if e.kind == "intensive" and e.start and e.end %} года <span class="ev-hero-wd">({% include weekdays.html a=e.start b=e.end %})</span>{% endif %}</p>
         <p class="ev-hero-place">{{ e.place }}{% if e.venue and e.venue != "" %} · {{ e.venue }}{% endif %}</p>
         <p class="lead">{% include tx.html s=e.summary %}</p>
         <dl class="facts">
@@ -59,13 +59,16 @@ layout: default
     <div class="wrap narrow">
 
       {%- if e.schedule and e.schedule.size > 0 %}
-      <h2>Как устроен день</h2>
+      <h2>{{ e.schedule_title | default: "Как устроен день" }}</h2>
       {%- assign tl_first = e.schedule | first -%}{%- assign tl_len = tl_first.time | size -%}
       <ol class="timeline{% if tl_len > 11 %} timeline-days{% endif %}">
         {%- for d in e.schedule %}
         <li><span class="tl-time">{{ d.time }}</span><span class="tl-what"><b>{% include tx.html s=d.what %}</b></span></li>
         {%- endfor %}
       </ol>
+      {%- if e.schedule_note and e.schedule_note != "" %}
+      <p class="tl-note">{% include tx.html s=e.schedule_note %}</p>
+      {%- endif %}
       {%- endif %}
     </div>
   </section>
@@ -118,9 +121,7 @@ layout: default
       {%- for f in e.faq %}
       <details class="acc"><summary>{% include tx.html s=f.q %}</summary><div class="acc-body">{% include md.html s=f.a %}</div></details>
       {%- endfor %}
-      {%- for f in S.faq %}
-      <details class="acc"><summary>{% include tx.html s=f.q %}</summary><div class="acc-body">{% include md.html s=f.a %}</div></details>
-      {%- endfor %}
+      {% include faq.html kind=e.kind %}
     </div>
   </section>
 

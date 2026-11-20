@@ -170,7 +170,7 @@ function applicationText_(r, saved, note) {
   if (r.plus1) facts.push('приедет с +1');
   if (r.evo === 'Да') facts.push('проходил(а) Эволюцию');
   if (r.before === 'Да') facts.push('уже был(а) у Мастера');
-  if (r.before === 'Будет впервые') facts.push('у Мастера впервые');
+  if (r.before === 'Буду впервые' || r.before === 'Будет впервые') facts.push('у Мастера впервые');
   if (facts.length) lines.push(facts.join(' · '));
   if (r.evo_only && r.evo !== 'Да') lines.push('⚠ Не отметил(а), что проходил(а) Эволюцию, а ретрит — для выпускников. Стоит поговорить лично: может, лучше начать с интенсива.');
   if (r.source) lines.push('Откуда узнал(а): ' + esc_(r.source));

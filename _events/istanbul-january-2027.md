@@ -19,27 +19,29 @@ online: false
 group: "Группа до 40 человек"
 audience: all                 # all — открыт для всех · evolution — в основном для прошедших «Эволюцию»
 
-summary: "Три дня практики с Мастером в Стамбуле в конце января — первая встреча года."
+summary: "Впервые в Стамбуле трёхдневный ретрит выходного дня. Возможность начать год с глубокого погружения в практику и внутренней перезагрузки."
 
-photo: "/assets/media/istanbul/blue-mosque.webp"
-photo_small: "/assets/media/istanbul/blue-mosque-800.webp"
-photo_pos: "50% 55%"
+photo: "/assets/media/istanbul/marmara-evening.webp"
+photo_small: "/assets/media/istanbul/marmara-evening-800.webp"
+photo_pos: "50% 62%"
 og_image: "/assets/img/og-istanbul-january.jpg"
 gallery:
-  - { src: "/assets/media/istanbul/blue-mosque.webp", small: "/assets/media/istanbul/blue-mosque-800.webp", alt: "Двор Голубой мечети в сумерках" }
-  - { src: "/assets/media/istanbul/ortakoy-interior.webp", small: "/assets/media/istanbul/ortakoy-interior-800.webp", alt: "Купол мечети Ортакёй" }
-  - { src: "/assets/media/istanbul/suleymaniye-night.webp", small: "/assets/media/istanbul/suleymaniye-night-800.webp", alt: "Мечеть Сулеймание вечером, вид с Золотого Рога" }
+  - { src: "/assets/media/istanbul/marmara-evening.webp", small: "/assets/media/istanbul/marmara-evening-800.webp", alt: "Мраморное море вечером" }
+  - { src: "/assets/media/istanbul/tuzla-promenade.webp", small: "/assets/media/istanbul/tuzla-promenade-800.webp", alt: "Набережная в Тузле" }
+  - { src: "/assets/media/istanbul/eskihisar-coast.webp", small: "/assets/media/istanbul/eskihisar-coast-800.webp", alt: "Берег Эскихисара в Гебзе, вид с моря" }
 
+schedule_title: "Расписание"
 schedule:
-  - { time: "Пятница, 29 января", what: "10:00–18:00 — практика с Мастером" }
-  - { time: "Суббота, 30 января", what: "10:00–18:00 — практика с Мастером" }
-  - { time: "Воскресенье, 31 января", what: "10:00–15:00 — практика с Мастером" }
+  - { time: "Пятница, 29 января", what: "6 часов практики" }
+  - { time: "Суббота, 30 января", what: "6 часов практики" }
+  - { time: "Воскресенье, 31 января", what: "3 часа практики" }
+schedule_note: "Точное время будет согласовано позднее. Между сессиями предусмотрены перерыв на обед и кофе-брейки."
 
 venue_text: "Место проведения уточняется — сообщим его всем, кто оставит заявку."
 stay_text: ""
 travel_text: ""
 faq: []
 ---
-Интенсив выходного дня с погружением: три дня практики под руководством Мастера, вдали от повседневной суеты — в самом сердце Стамбула.
+Ретрит выходного дня — это 2,5 дня глубокого погружения в медитацию и внутреннее исследование, возможность полностью сосредоточиться на практике, оставив за пределами ретрита привычные дела и заботы. В тихом пространстве с видом на море, вдали от городского шума, мы создаём условия для непрерывной практики в присутствии Мастера. Интенсив проходит только очно, без онлайн-трансляций и записей.
 
-Для кого-то этот интенсив станет первым опытом знакомства с подходом Мастера и возможностью безопасно войти в практику. Для практикующих с Мастером — возможностью глубокого погружения в начале года.
+Для новых участников это возможность познакомиться с подходом Мастера через непосредственный опыт практики. Для тех, кто уже практикует с Мастером, — возможность углубить этот опыт в интенсивном формате.

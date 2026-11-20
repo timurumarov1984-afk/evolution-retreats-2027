@@ -50,6 +50,9 @@ gallery:
   - { src: "/assets/img/cirali-hotel.webp", small: "/assets/img/cirali-hotel-720.webp", alt: "Территория отеля Azur Cirali с высоты" }
   - { src: "/assets/img/cirali-azur.webp", small: "/assets/img/cirali-azur-720.webp", alt: "Вход в отель Azur Cirali" }
 
+# Расписание. Необязательные поля рядом с ним:
+#   schedule_title: "Расписание"   — свой заголовок блока (без него — «Как устроен день»)
+#   schedule_note: "…"              — примечание под расписанием
 schedule:
   - { time: "08:30–10:00", what: "Утренняя встреча с Мастером: беседа, медитация, совместная практика" }
   - { time: "Днём", what: "Время открыто: рабочие встречи, личные задачи, отдых, прогулки, тишина" }

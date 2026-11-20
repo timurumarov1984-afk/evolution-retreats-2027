@@ -88,9 +88,15 @@
       if (only) picks.forEach(function (x) { x.checked = false; });
       i.checked = true; syncOnline();
     }
+    // Вопрос «очно или онлайн» — только когда выбрана встреча с онлайн-участием (ретриты в Чиралы).
+    // Если вместе с ней выбран интенсив, подсказываем, что онлайн относится только к ретриту.
+    var modeHint = $('[data-mode-hint]', form);
     function syncOnline() {
-      var any = picks.some(function (i) { return i.checked && i.closest('.pick').dataset.online === '1'; });
+      var on = picks.filter(function (i) { return i.checked; });
+      var any = on.some(function (i) { return i.closest('.pick').dataset.online === '1'; });
+      var mixed = any && on.some(function (i) { return i.closest('.pick').dataset.online !== '1'; });
       if (onlineField) onlineField.hidden = !any;
+      if (modeHint) modeHint.hidden = !mixed;
     }
     var evoHint = $('[data-evo-hint]', form);
     function evoOnlyPicked() { return picks.filter(function (i) { return i.checked && i.closest('.pick').dataset.audience === 'evolution'; }); }

@@ -1,0 +1,6 @@
+{%- comment -%} Дни недели встречи словами: «пятница — воскресенье». Считаются по датам сами. «include weekdays.html a=начало b=конец» {%- endcomment -%}
+{%- if include.a and include.b -%}
+{%- assign wd_names = "понедельник,вторник,среда,четверг,пятница,суббота,воскресенье" | split: "," -%}
+{%- assign wd_a = include.a | date: "%u" | minus: 1 -%}{%- assign wd_b = include.b | date: "%u" | minus: 1 -%}
+{{ wd_names[wd_a] }}&nbsp;— {{ wd_names[wd_b] }}
+{%- endif -%}

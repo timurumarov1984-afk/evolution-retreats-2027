@@ -97,17 +97,23 @@ cirali() {
 }
 
 # Стамбул: фото с Wikimedia Commons (свободные лицензии, авторы — в _data/site.yml → photo_credits).
-# Исходники скачаны в ~/.cache/evo-tools/istanbul/ (3840 px по длинной стороне).
+# Исходники скачаны в ~/.cache/evo-tools/istanbul/ (оригиналы с Commons; что откуда — в assets/media/СОСТАВ.md).
+# На страницах — спокойные виды на море в районе Тузлы и Гебзе. Городские фото (мечети, паром) лежат в запасе.
 istanbul() {
   echo "Стамбул (Wikimedia Commons)"
-  local I="$CACHE/istanbul" O="istanbul"
-  for n in blue-mosque suleymaniye-night ortakoy-interior ferry; do
-    still "$I/$n.jpg" - "$O/$n"     "null" 1600 "null" 80
-    still "$I/$n.jpg" - "$O/$n-800" "null" 800  "null" 78
+  local I="$CACHE/istanbul" O="istanbul" spec n c
+  # имя:кадрирование — у двух фото из Тузлы снизу срезан штамп с датой съёмки
+  for spec in "marmara-evening:null" "eskihisar-sea:null" "eskihisar-coast:null" "pines-sunset:null" \
+              "tuzla-promenade:crop=iw:ih*0.86:0:0" "tuzla-alley:crop=iw:ih*0.86:0:0" \
+              "blue-mosque:null" "suleymaniye-night:null" "ortakoy-interior:null" "ferry:null"; do
+    n="${spec%%:*}"; c="${spec#*:}"
+    [ -s "$I/$n.jpg" ] || { echo "  нет исходника $n.jpg — пропускаю"; continue; }
+    still "$I/$n.jpg" - "$O/$n"     "$c" 1600 "null" 80
+    still "$I/$n.jpg" - "$O/$n-800" "$c" 800  "null" 78
   done
   # Превью ссылок двух стамбульских интенсивов (январь и август)
-  ffmpeg -v error -y -i "$I/blue-mosque.jpg" -vf "scale=1200:-2,crop=1200:630:0:(ih-630)*0.55" -q:v 3 "$ROOT/assets/img/og-istanbul-january.jpg"
-  ffmpeg -v error -y -i "$I/suleymaniye-night.jpg" -vf "scale=1200:-2,crop=1200:630:0:(ih-630)*0.6" -q:v 3 "$ROOT/assets/img/og-istanbul-august.jpg"
+  ffmpeg -v error -y -i "$I/marmara-evening.jpg" -vf "scale=1200:-2,crop=1200:630:0:(ih-630)*0.62" -q:v 3 "$ROOT/assets/img/og-istanbul-january.jpg"
+  ffmpeg -v error -y -i "$I/eskihisar-sea.jpg" -vf "scale=1200:-2,crop=1200:630:0:(ih-630)*0.45" -q:v 3 "$ROOT/assets/img/og-istanbul-august.jpg"
 }
 
 case "${1:-all}" in
