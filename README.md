@@ -145,17 +145,19 @@
 
 ## Публикация
 
-Черновик для согласования: **https://timurumarov1984-afk.github.io/evolution-retreats-2027/**
-(репозиторий `timurumarov1984-afk/evolution-retreats-2027`, ветка `main`). GitHub собирает сайт сам, через 1–2 минуты после изменения.
+Адрес сайта: **https://evolution.retreatmaster.online/**
+(репозиторий `timurumarov1984-afk/evolution-retreats-2027`, ветка `main`). GitHub собирает сайт сам, через 1–2 минуты после изменения. Прежний адрес `timurumarov1984-afk.github.io/evolution-retreats-2027/` сам переводит на новый.
 
 Пока это черновик:
 - `draft: true` — поисковики сайт не видят, сверху пометка «Черновик для согласования»;
 - `form.endpoint` пустой — заявки не отправляются, вместо отправки человек видит контакты Натальи.
 
-Свой домен (например, master.evolution.place):
-1. В Тильде или у регистратора домена добавьте CNAME-запись `master` → `timurumarov1984-afk.github.io`.
-2. В настройках репозитория: Pages → Custom domain.
-3. В `_config.yml` поменяйте `url` на свой адрес, а `baseurl` сделайте пустым `""`.
+Как устроен адрес `evolution.retreatmaster.online` (так же, как у сайтов других ретритов на retreatmaster.online):
+1. У регистратора домена (GoDaddy) есть CNAME-запись `evolution` → `timurumarov1984-afk.github.io`.
+2. В корне репозитория лежит файл `CNAME` с этим адресом — по нему GitHub понимает, какой домен обслуживать.
+3. В `_config.yml` в `url` стоит этот адрес, а `baseurl` пустой `""`.
+
+Чтобы сменить адрес, поменяйте его во всех трёх местах. Сам сайт `retreatmaster.online` (календарь ретритов) — отдельный, на другом хостинге; его эти настройки не касаются.
 
 ## Посмотреть сайт у себя
 

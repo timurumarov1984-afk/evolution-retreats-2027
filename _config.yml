@@ -1,8 +1,8 @@
 # Настройки сборки. Обычно их не трогают.
 # Всё общее содержание — в _data/site.yml, встречи — в папке _events (одна встреча = один файл).
 title: "Эволюция · Ретриты с Мастером"
-url: "https://timurumarov1984-afk.github.io"   # адрес сайта без слеша в конце — нужен для превью ссылок. Свой домен: "https://master.evolution.place"
-baseurl: "/evolution-retreats-2027"            # подпапка сайта на GitHub Pages; со своим доменом — пусто ""
+url: "https://evolution.retreatmaster.online"   # адрес сайта без слеша в конце — нужен для превью ссылок. Тот же адрес записан в файле CNAME
+baseurl: ""                                     # сайт лежит в корне своего домена, поэтому пусто. Без домена, на github.io, здесь было бы "/evolution-retreats-2027"
 lang: ru
 timezone: Europe/Moscow
 
