@@ -57,20 +57,36 @@ body_class: home
   </div>
 </section>
 
-<section class="day" aria-labelledby="day-h">
+{%- comment -%}
+  Как проходит практика: карточки «Ретрит» и «Интенсив» с переключателем. Тексты — в _data/site.yml → day.
+  Без скрипта переключатель скрыт, и карточки просто идут одна за другой.
+{%- endcomment %}
+<section class="day" id="practice" aria-labelledby="day-h" data-tabs>
   <div class="wrap narrow">
-    <p class="label">Как устроен день на ретрите</p>
     <h2 id="day-h">{{ S.day.title }}</h2>
-    <p class="lead">{% include tx.html s=S.day.text %}</p>
-    <ol class="timeline">
+    <div class="seg" role="tablist" aria-labelledby="day-h" hidden>
       {%- for d in S.day.items %}
-      <li><span class="tl-time">{{ d.time }}</span><span class="tl-what"><b>{% include tx.html s=d.what %}</b><small>{% include tx.html s=d.note %}</small></span></li>
+      <button class="seg-btn" type="button" role="tab" id="day-tab-{{ d.key }}" aria-controls="day-{{ d.key }}" aria-selected="{% if forloop.first %}true{% else %}false{% endif %}"{% unless forloop.first %} tabindex="-1"{% endunless %}>{{ d.tab }}</button>
       {%- endfor %}
-    </ol>
-    <div class="note-card">
-      <h3>{{ S.online.title }}</h3>
-      <p>{% include tx.html s=S.online.text %}</p>
     </div>
+    {%- for d in S.day.items %}
+    <article class="day-card" id="day-{{ d.key }}">
+      <p class="label day-card-label">{{ d.tab }}</p>
+      <h3>{% include tx.html s=d.title %}</h3>
+      <p class="lead">{% include tx.html s=d.text %}</p>
+      <ol class="timeline">
+        {%- for r in d.rows %}
+        <li><span class="tl-time">{{ r.time }}</span><span class="tl-what"><b>{% include tx.html s=r.what %}</b><small>{% include tx.html s=r.note %}</small></span></li>
+        {%- endfor %}
+      </ol>
+      {%- if d.online %}
+      <div class="note-card">
+        <h4>{{ S.online.title }}</h4>
+        <p>{% include tx.html s=S.online.text %}</p>
+      </div>
+      {%- endif %}
+    </article>
+    {%- endfor %}
   </div>
 </section>
 

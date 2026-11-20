@@ -242,4 +242,31 @@
     if ('ResizeObserver' in window) new ResizeObserver(post).observe(embed);
     post();
   }
+
+  /* 8. Переключатель «Ретрит / Интенсив» в блоке «Как проходит практика».
+     Кнопки — вкладки: клик или стрелки влево-вправо. Показана одна карточка, вторая скрыта. */
+  $$('[data-tabs]').forEach(function (box) {
+    var list = $('[role="tablist"]', box), tabs = $$('[role="tab"]', box);
+    var panels = tabs.map(function (t) { return document.getElementById(t.getAttribute('aria-controls')); });
+    if (!list || tabs.length < 2 || panels.indexOf(null) >= 0) return;
+    function select(i, byUser, focus) {
+      tabs.forEach(function (t, k) {
+        t.setAttribute('aria-selected', k === i ? 'true' : 'false');
+        t.tabIndex = k === i ? 0 : -1;
+        panels[k].classList.toggle('is-in', !!byUser && k === i && panels[k].hidden); /* плавное появление — только при переключении */
+        panels[k].hidden = k !== i;
+      });
+      if (focus) tabs[i].focus();
+    }
+    panels.forEach(function (p, k) { p.setAttribute('role', 'tabpanel'); p.setAttribute('aria-labelledby', tabs[k].id); });
+    tabs.forEach(function (t, i) {
+      t.addEventListener('click', function () { select(i, true); });
+      t.addEventListener('keydown', function (e) {
+        var n = e.key === 'ArrowRight' ? i + 1 : e.key === 'ArrowLeft' ? i - 1 : e.key === 'Home' ? 0 : e.key === 'End' ? tabs.length - 1 : null;
+        if (n === null) return;
+        e.preventDefault(); select((n + tabs.length) % tabs.length, true, true);
+      });
+    });
+    list.hidden = false; box.classList.add('tabs-on'); select(0);
+  });
 })();

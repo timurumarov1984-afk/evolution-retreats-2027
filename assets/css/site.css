@@ -194,8 +194,29 @@ section { padding: 56px 0; }
 .tl-note { margin: -8px 0 0; color: var(--ink-2); }
 .tl-what small { display: block; color: var(--muted); font-size: .92rem; line-height: 1.45; margin-top: 2px; }
 .note-card { margin-top: 26px; padding: 20px 22px; border-radius: var(--r); background: rgba(255, 255, 255, .78); border: 1px solid var(--line); }
-.note-card h3 { color: var(--violet); margin-bottom: 6px; }
+.note-card h3, .note-card h4 { margin: 0 0 6px; font-size: 1.3rem; font-weight: 400; line-height: 1.12; letter-spacing: -.01em; color: var(--violet); }
 .note-card p { margin: 0; color: var(--ink-2); }
+
+/* Как проходит практика: переключатель «Ретрит / Интенсив» и две карточки.
+   Без скрипта переключатель скрыт, карточки идут одна за другой и подписаны сверху. */
+.seg { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; max-width: 440px; margin: 0 0 18px; padding: 4px; border-radius: 999px; background: rgba(255, 255, 255, .72); border: 1px solid var(--line); }
+.seg[hidden] { display: none; }
+.seg-btn { min-height: 44px; padding: 0 10px; border: 0; border-radius: 999px; background: transparent; color: var(--ink-2); font: inherit; font-size: .98rem; cursor: pointer; transition: background .15s, color .15s; }
+.seg-btn:hover { color: var(--violet-d); }
+.seg-btn[aria-selected="true"] { background: var(--violet); color: #fff; }
+.seg-btn:focus-visible { outline: 2px solid var(--violet); outline-offset: 2px; }
+.day-card { padding: 24px 20px; border-radius: var(--r); background: var(--white); box-shadow: var(--shadow); }
+.day-card[hidden] { display: none; }
+.day-card + .day-card { margin-top: 16px; }
+.day-card h3 { font-size: clamp(1.45rem, 5.6vw, 1.9rem); font-weight: 300; margin-bottom: .45em; }
+.day-card .lead { margin: 0; font-size: 1.06rem; }
+.day-card .timeline { margin: 20px 0 0; }
+.day-card .timeline li { grid-template-columns: 112px 1fr; }
+.day-card .timeline li:last-child { border-bottom: 0; padding-bottom: 0; }
+.day-card .note-card { margin-top: 20px; background: var(--lilac); border: 0; }
+.tabs-on .day-card-label { display: none; }
+.day-card.is-in { animation: tab-in .25s ease; }
+@keyframes tab-in { from { opacity: 0; transform: translateY(6px); } }
 
 /* Как записаться */
 .steps { list-style: none; margin: 0; padding: 0; display: grid; gap: 12px; counter-reset: st; }
@@ -383,6 +404,8 @@ h2.tri::before { content: ""; position: absolute; left: 2px; top: .52em; border-
   .collage { grid-template-columns: repeat(4, 1fr); grid-auto-rows: calc((100cqi - 36px) / 4 * .82); gap: 12px; }
   .c-hero { grid-row: span 2; }
   .fmt-grid { grid-template-columns: 1fr 1fr; gap: 22px; }
+  .day-card { padding: 32px 34px; }
+  .day-card .timeline li { grid-template-columns: 132px 1fr; }
   .steps { grid-template-columns: 1fr 1fr; }
   .form { padding: 34px 36px; }
   .foot-in { grid-template-columns: 1.4fr 1fr 1fr; }
