@@ -100,7 +100,7 @@ cirali() {
 # Исходники скачаны в ~/.cache/evo-tools/istanbul/ (оригиналы с Commons; что откуда — в assets/media/СОСТАВ.md).
 # На страницах — спокойные виды на море в районе Тузлы и Гебзе. Городские фото (мечети, паром) лежат в запасе.
 istanbul() {
-  echo "Стамбул (Wikimedia Commons)"
+  echo "Стамбул (Wikimedia Commons и фото отеля)"
   local I="$CACHE/istanbul" O="istanbul" spec n c
   # имя:кадрирование — у двух фото из Тузлы снизу срезан штамп с датой съёмки
   for spec in "marmara-evening:null" "eskihisar-sea:null" "eskihisar-coast:null" "pines-sunset:null" \
@@ -109,6 +109,17 @@ istanbul() {
     n="${spec%%:*}"; c="${spec#*:}"
     [ -s "$I/$n.jpg" ] || { echo "  нет исходника $n.jpg — пропускаю"; continue; }
     still "$I/$n.jpg" - "$O/$n"     "$c" 1600 "null" 80
+    still "$I/$n.jpg" - "$O/$n-800" "$c" 800  "null" 78
+  done
+  # Elite Hotel Darıca (январский интенсив) — официальные фото отеля, с согласия отеля.
+  # Взяты в полном размере (2000 px) со страницы отеля на Trip.com: на сайте самого отеля те же кадры выложены мелкими.
+  # имя|кадрирование под 3:2|ширина большого файла. Рядом кладётся «-800» для галереи.
+  local w
+  for spec in "hotel-balcony-sea|null|1600" "hotel-terrace|crop=1688:1125:0:0|1600" "hotel-exterior|null|1600" \
+              "hotel-room-sea|null|1600" "hotel-window-sea|null|1600" "hotel-seafront|crop=1200:800:80:0|1200"; do
+    IFS='|' read -r n c w <<< "$spec"
+    [ -s "$I/$n.jpg" ] || { echo "  нет исходника $n.jpg — пропускаю"; continue; }
+    still "$I/$n.jpg" - "$O/$n"     "$c" "$w" "null" 80
     still "$I/$n.jpg" - "$O/$n-800" "$c" 800  "null" 78
   done
   # Превью ссылок двух стамбульских интенсивов (январь и август)
