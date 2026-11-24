@@ -18,15 +18,16 @@
 
 /* ======================= НАСТРОЙКИ: заполнить один раз ======================= */
 var CONFIG = {
-  // Адрес таблицы для заявок (создайте пустую Google-таблицу и вставьте её адрес из строки браузера)
-  SHEET_URL: 'https://docs.google.com/spreadsheets/d/…/edit',
+  // Таблица для заявок. Можно оставить пустым: при запуске setup скрипт сам создаст таблицу «Заявки — …»
+  // на Google Диске этой почты и запомнит её. Если нужна своя таблица — вставьте её адрес из строки браузера.
+  SHEET_URL: '',
   // Куда дублировать заявки письмом (можно несколько через запятую). Пусто — без писем.
   NOTIFY_EMAIL: 'nebazhenova@gmail.com, aks@evolution.place',
   // Название — в письмах и сообщениях
   TITLE: 'Ретриты с Мастером 2027',
-  // Бот: @master_retreats_bot («Ретрит Эволюция»)
+  // Бот заявок — свой у Эволюции (@evolution_retreats_bot), отдельный от бота Мастера @master_retreats_bot
   // Адрес сайта — бот даст его тем, кто напишет ему случайно
-  SITE_URL: '',
+  SITE_URL: 'https://evolution.retreatmaster.online/',
 
   // Telegram-бот: токен от @BotFather (выглядит как 1234567890:AAH…)
   TELEGRAM_TOKEN: '',
@@ -39,16 +40,31 @@ var CONFIG = {
   TIMEZONE: 'Europe/Moscow',
 
   SHEET_NAME: 'Заявки',
-  STATUSES: ['Новая', 'Связались', 'Оплатил', 'Отказ']
+  STATUSES: ['Новая', 'Связались', 'Оплатил', 'Отказ'],
+
+  // Встречи года. У каждой в таблице своя колонка: в строке человека его имя стоит там, куда он записался.
+  // Названия — в точности как в анкете на сайте, по порядку дат. Если на сайте появится новая встреча,
+  // её колонка добавится сама, в конце таблицы, с первой же заявкой.
+  EVENTS: [
+    'Интенсив в Стамбуле · 29–31 января 2027',
+    'Ретрит в Чиралы · 6–14 марта 2027',
+    'Интенсив в Стамбуле · 6–8 августа 2027',
+    'Интенсив в Ясно Поле · 10–12 сентября 2027',
+    'Ретрит в Чиралы · 31 октября – 8 ноября 2027'
+  ],
+  MARK: '✓'   // что поставить в колонку встречи, если человек не назвал имя
 };
 /* ============================================================================ */
 
-var COLUMNS = [
-  ['time', 'Когда'], ['events', 'Встречи'], ['name', 'Имя'], ['way', 'Как связаться'], ['contact', 'Контакт'],
+/* Столбцы таблицы: «Когда», «Имя», дальше — по колонке на каждую встречу (CONFIG.EVENTS), дальше остальные ответы анкеты */
+var COLUMNS_HEAD = [['time', 'Когда'], ['name', 'Имя']];
+var COLUMNS_TAIL = [
+  ['way', 'Как связаться'], ['contact', 'Контакт'],
   ['side', 'Откуда человек'], ['evo', 'Проходил Эволюцию'], ['before', 'Был у Мастера'], ['mode', 'Очно или онлайн'],
   ['plus1', '+1'], ['source', 'Откуда узнал'], ['comment', 'Комментарий'], ['status', 'Статус'],
   ['utm', 'Метки (utm)'], ['ref', 'Пришёл с'], ['page', 'Страница']
 ];
+var COLUMNS = COLUMNS_HEAD.concat(COLUMNS_TAIL);
 var SIDES = ['Эволюция', 'Мастер', 'Новые'];
 
 /* ------------------------------ заявка с сайта ------------------------------ */
@@ -66,7 +82,7 @@ function doPost(e) {
   var lock = LockService.getScriptLock();
   try {
     lock.waitLock(20000);
-    sheet_().appendRow(COLUMNS.map(function (c) { return row[c[0]] || ''; }));
+    appendRow_(row);
     saved = true;
   } catch (err) {
     note = 'В таблицу заявка не попала: ' + err;
@@ -92,32 +108,78 @@ function side_(r) {
 }
 
 /* ------------------------------ таблица ------------------------------ */
+/* Таблица заявок: своя (адрес в настройках) или созданная скриптом при первом запуске — её номер запомнен в свойствах скрипта */
+function book_() {
+  if (/\/d\/[A-Za-z0-9_-]{20,}/.test(CONFIG.SHEET_URL)) return SpreadsheetApp.openByUrl(CONFIG.SHEET_URL);
+  var id = props_().getProperty('SHEET_ID');
+  if (id) return SpreadsheetApp.openById(id);
+  var ss = SpreadsheetApp.create('Заявки — ' + CONFIG.TITLE);
+  props_().setProperty('SHEET_ID', ss.getId());
+  try { ss.setSpreadsheetTimeZone(CONFIG.TIMEZONE); ss.getSheets()[0].setName(CONFIG.SHEET_NAME); } catch (err) { /* останется пустой первый лист — не страшно */ }
+  return ss;
+}
+function bookUrl_() { try { return book_().getUrl(); } catch (err) { return ''; } }
+
+/* Название встречи в одном виде: без неразрывных и двойных пробелов */
+function norm_(s) { return String(s == null ? '' : s).replace(/[\s ]+/g, ' ').trim(); }
+function splitEvents_(s) { return String(s || '').split(';').map(norm_).filter(String); }
+function fieldTitles_() { return COLUMNS.map(function (c) { return c[1]; }); }
+/* Колонка встречи — та, что не поле анкеты и названа как на сайте: «Название · даты» */
+function isEventCol_(h) { return h.indexOf(' · ') > 0 && fieldTitles_().indexOf(h) < 0; }
+function head_(sh) { return sh.getRange(1, 1, 1, sh.getLastColumn()).getValues()[0].map(norm_); }
+
 function sheet_() {
-  var ss = SpreadsheetApp.openByUrl(CONFIG.SHEET_URL);
-  var sh = ss.getSheetByName(CONFIG.SHEET_NAME) || ss.insertSheet(CONFIG.SHEET_NAME);
+  var ss = book_();
+  var sh = ss.getSheetByName(CONFIG.SHEET_NAME);
+  if (!sh) { // в новой пустой таблице один пустой лист — берём его, а не добавляем второй
+    try { var all = ss.getSheets(); if (all.length === 1 && all[0].getLastRow() === 0) sh = all[0].setName(CONFIG.SHEET_NAME); } catch (err) { sh = null; }
+    if (!sh) sh = ss.insertSheet(CONFIG.SHEET_NAME);
+  }
   if (sh.getLastRow() === 0) {
-    sh.appendRow(COLUMNS.map(function (c) { return c[1]; }));
+    var events = CONFIG.EVENTS.map(norm_);
+    var head = COLUMNS_HEAD.map(function (c) { return c[1]; }).concat(events, COLUMNS_TAIL.map(function (c) { return c[1]; }));
+    sh.appendRow(head);
     sh.setFrozenRows(1);
-    sh.getRange(1, 1, 1, COLUMNS.length).setFontWeight('bold');
-    var col = colIndex_('status');
+    sh.getRange(1, 1, 1, head.length).setFontWeight('bold');
     var rule = SpreadsheetApp.newDataValidation().requireValueInList(CONFIG.STATUSES, true).setAllowInvalid(false).build();
-    sh.getRange(2, col, 2000, 1).setDataValidation(rule);
+    sh.getRange(2, head.indexOf('Статус') + 1, 2000, 1).setDataValidation(rule);
+    try { // оформление: имя всегда на виду, названия встреч в шапке переносятся
+      sh.setFrozenColumns(COLUMNS_HEAD.length);
+      sh.getRange(1, 1, 1, head.length).setWrap(true).setVerticalAlignment('middle');
+      for (var i = 0; i < events.length; i++) sh.setColumnWidth(COLUMNS_HEAD.length + 1 + i, 160);
+    } catch (err) { /* без оформления таблица тоже работает */ }
   }
   return sh;
 }
-function colIndex_(key) { for (var i = 0; i < COLUMNS.length; i++) if (COLUMNS[i][0] === key) return i + 1; return 0; }
 
-/* Все заявки из таблицы: [{events:[...], side, status, contact, name, time}] — без тестовых («ТЕСТ» в имени) */
+/* Записать заявку строкой: ответы анкеты — в свои столбцы, имя человека — в колонку каждой выбранной встречи */
+function appendRow_(row) {
+  var sh = sheet_(), head = head_(sh), evs = splitEvents_(row.events);
+  evs.forEach(function (ev) {
+    if (head.indexOf(ev) >= 0) return;
+    sh.getRange(1, head.length + 1).setValue(ev).setFontWeight('bold'); // новая встреча на сайте — новая колонка в конце
+    head.push(ev);
+  });
+  var key = {}; COLUMNS.forEach(function (c) { key[c[1]] = c[0]; });
+  sh.appendRow(head.map(function (h) {
+    if (key[h]) return row[key[h]] || '';
+    return evs.indexOf(h) >= 0 ? (norm_(row.name) || CONFIG.MARK) : '';
+  }));
+}
+
+/* Все заявки из таблицы: [{events:[...], side, status, contact, name, time}] — без тестовых («ТЕСТ» в имени).
+   Встречи человека — колонки встреч, где в его строке что-то стоит (имя или любая пометка). Вписать или стереть можно руками: итоги это учтут. */
 function rows_() {
   var sh = sheet_(), n = sh.getLastRow();
   if (n < 2) return [];
-  var head = sh.getRange(1, 1, 1, sh.getLastColumn()).getValues()[0];
+  var head = head_(sh);
   var idx = {}; COLUMNS.forEach(function (c) { idx[c[0]] = head.indexOf(c[1]); });
+  var evCols = []; head.forEach(function (h, i) { if (isEventCol_(h)) evCols.push(i); });
   return sh.getRange(2, 1, n - 1, head.length).getValues().map(function (v) {
     var g = function (k) { return idx[k] >= 0 ? v[idx[k]] : ''; };
     return {
       time: g('time'), name: String(g('name')), contact: String(g('contact')).trim().toLowerCase(),
-      events: String(g('events')).split(';').map(function (s) { return s.trim(); }).filter(String),
+      events: evCols.filter(function (i) { var x = String(v[i]).trim(); return x !== '' && !/^(false|нет|-)$/i.test(x); }).map(function (i) { return head[i]; }),
       side: String(g('side')) || side_({ evo: g('evo'), before: g('before'), utm: g('utm'), source: g('source') }),
       status: String(g('status'))
     };
@@ -161,7 +223,7 @@ function sideLine_(x) {
 function applicationText_(r, saved, note) {
   var lines = [];
   lines.push('<b>Новая заявка</b> · ' + (r.side === 'Мастер' ? 'от Мастера' : r.side === 'Новые' ? 'новый человек' : 'Эволюция'));
-  r.events.split(';').map(function (s) { return s.trim(); }).filter(String).forEach(function (ev) { lines.push('<b>' + esc_(ev) + '</b>'); });
+  splitEvents_(r.events).forEach(function (ev) { lines.push('<b>' + esc_(ev) + '</b>'); });
   lines.push('');
   lines.push(esc_(r.name));
   lines.push(contactHtml_(r.way, r.contact));
@@ -180,11 +242,13 @@ function applicationText_(r, saved, note) {
     try {
       var t = tally_(rows_());
       lines.push('');
-      r.events.split(';').map(function (s) { return s.trim(); }).filter(String).forEach(function (ev) {
+      splitEvents_(r.events).forEach(function (ev) {
         var x = t[ev]; if (!x) return;
         lines.push('Всего на «' + esc_(shortEvent_(ev)) + '»: <b>' + x.total + '</b>' + (sideLine_(x) ? ' (' + sideLine_(x) + ')' : ''));
       });
     } catch (err) { /* без итогов */ }
+    var url = bookUrl_();   // заявка уже в таблице — ссылка, чтобы открыть её в один тап
+    if (url) lines.push('<a href="' + esc_(url) + '">Открыть таблицу заявок</a>');
   } else {
     lines.push('');
     lines.push('⚠ ' + esc_(note || 'В таблицу заявка не попала — сохраните её из этого сообщения.'));
@@ -255,7 +319,7 @@ function telegramAll_(text) {
 /* ------------------------------ таблица файлом Excel ------------------------------ */
 /* Вся таблица заявок одним файлом .xlsx — то же, что «Файл → Скачать → Microsoft Excel» в Google Таблицах */
 function excelBlob_() {
-  var ss = SpreadsheetApp.openByUrl(CONFIG.SHEET_URL);
+  var ss = book_();
   SpreadsheetApp.flush();
   DriveApp.getFileById(ss.getId()); // с этой строкой Google разрешает скрипту скачивать таблицу файлом
   var res = UrlFetchApp.fetch('https://docs.google.com/spreadsheets/d/' + ss.getId() + '/export?format=xlsx', {
@@ -313,7 +377,7 @@ function checkBot() {
       try {
         if (!telegramFile_(m.chat.id, excelBlob_(), excelCaption_())) telegram_(m.chat.id, 'Файл собран, но Telegram его не принял. Попробуйте ещё раз через несколько минут.');
       } catch (err) {
-        telegram_(m.chat.id, 'Не получилось собрать таблицу файлом: ' + esc_(err) + '\nСама таблица на месте: ' + esc_(CONFIG.SHEET_URL));
+        telegram_(m.chat.id, 'Не получилось собрать таблицу файлом: ' + esc_(err) + '\nСама таблица на месте: ' + esc_(bookUrl_()));
       }
     }
   });
@@ -344,8 +408,8 @@ function weeklySummary() {
 /* ------------------------------ письмо ------------------------------ */
 function mail_(r, saved, note) {
   if (!CONFIG.NOTIFY_EMAIL) return false;
-  var body = COLUMNS.filter(function (c) { return c[0] !== 'time' && c[0] !== 'status' && r[c[0]]; })
-    .map(function (c) { return c[1] + ': ' + r[c[0]]; }).join('\n');
+  var body = ['Встречи: ' + (r.events || '')].concat(COLUMNS.filter(function (c) { return c[0] !== 'time' && c[0] !== 'status' && r[c[0]]; })
+    .map(function (c) { return c[1] + ': ' + r[c[0]]; })).join('\n');
   MailApp.sendEmail({
     to: CONFIG.NOTIFY_EMAIL,
     subject: (saved ? '' : '⚠ НЕ В ТАБЛИЦЕ · ') + 'Заявка · ' + CONFIG.TITLE + ' · ' + (r.name || '') + ' · ' + (r.events || ''),
@@ -359,7 +423,8 @@ function json_(o) { return ContentService.createTextOutput(JSON.stringify(o)).se
 /* ======================= ЗАПУСТИТЬ ОДИН РАЗ: setup ======================= */
 /**
  * Выполните setup из редактора (кнопка «Выполнить»). Google попросит разрешения — разрешите.
- *  - создаст лист «Заявки» и столбец «Статус» с выбором из списка;
+ *  - создаст таблицу заявок (если её адрес не вписан в настройки), лист «Заявки» и столбец «Статус» с выбором из списка;
+ *    адрес таблицы будет внизу, в журнале выполнения;
  *  - включит расписание: проверка бота раз в 5 минут, итоги дня в 20:00, итоги недели в понедельник в 10:00;
  *  - добавит в меню бота команду /itogi;
  *  - подключит тех, кто уже нажал «Начать» в боте, и пришлёт им тестовое сообщение.
@@ -367,6 +432,7 @@ function json_(o) { return ContentService.createTextOutput(JSON.stringify(o)).se
  */
 function setup() {
   sheet_();
+  Logger.log('Таблица заявок: ' + bookUrl_());
   ScriptApp.getProjectTriggers().forEach(function (t) {
     if (['checkBot', 'dailySummary', 'weeklySummary'].indexOf(t.getHandlerFunction()) >= 0) ScriptApp.deleteTrigger(t);
   });
@@ -387,10 +453,10 @@ function setup() {
   }
 }
 
-/** Пробная заявка — проверить таблицу, Telegram и письмо. В итоги не попадает (имя начинается с «ТЕСТ»). */
+/** Пробная заявка на первую встречу года — проверить таблицу, Telegram и письмо. В итоги не попадает (имя начинается с «ТЕСТ»). */
 function test() {
   var r = doPost({ postData: { contents: JSON.stringify({
-    answers: { events: 'ТЕСТ · проверка', name: 'ТЕСТ Проверка', way: 'Telegram', contact: '@nebazhenova', evo: 'Да', before: 'Да', mode: 'Очно', comment: 'Это пробная заявка' },
+    answers: { events: CONFIG.EVENTS[0], name: 'ТЕСТ Проверка', way: 'Telegram', contact: '@nebazhenova', evo: 'Да', before: 'Да', mode: 'Очно', comment: 'Это пробная заявка' },
     meta: { page: 'test', utm: '' }
   }) } });
   Logger.log(r.getContent());

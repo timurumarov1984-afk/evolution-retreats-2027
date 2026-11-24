@@ -149,7 +149,7 @@ form:
   lead: "Заполните заявку, пожалуйста: мы свяжемся с вами для уточнения деталей и направим информацию по способам оплаты."
   # Адрес приёмника заявок (Google Apps Script, см. apps-script/README.md).
   # Пусто — анкету можно заполнить, но вместо отправки человек увидит контакты организатора.
-  endpoint: ""
+  endpoint: "https://script.google.com/macros/s/AKfycbwbKyupTyzdhZuGGvb83CVLLVWeX4qf04NNvnpp7rqY_KpX2RhAw-Qir4CTvXAvShAu/exec"
   contact_ways: ["Telegram", "Телефон", "Почта", "WhatsApp"]
   sources: ["Программа Эволюции", "Telegram-канал", "Друзья и коллеги", "Уже был на встречах с Мастером", "Другое"]
 
