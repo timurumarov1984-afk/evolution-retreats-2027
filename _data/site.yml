@@ -28,7 +28,7 @@ master_platform_url: ""
 hero:
   label: "Практика внимательности"
   title: "Эволюция. *Ретриты с Мастером в 2027&nbsp;году*"
-  lead: "Практика с Мастером в Пространстве Эволюции в 2027 году. Традиционные ретриты в Чиралы и новый формат трёхдневных интенсивов в Стамбуле и Ясном Поле. Расписание, форматы практики, места проведения и условия участия."
+  lead: "Практика с Мастером в Пространстве Эволюции в 2027 году. Традиционные ретриты в Чиралы и новый формат трёхдневных интенсивов в Стамбуле и Ясно Поле. Расписание, форматы практики, места проведения и условия участия."
   og_image: "/assets/img/og-home.jpg"     # картинка превью ссылки на главную (1200×630, JPG)
 
 intro:
@@ -157,7 +157,10 @@ form:
 photo_credits:
   - { what: "Чиралы, побережье", who: "Alexey Komarov", license: "CC BY-SA 4.0", url: "https://commons.wikimedia.org/wiki/File:%C3%87%C4%B1ral%C4%B1_beach_2021-11-14-1.jpg" }
   - { what: "Чиралы, рассвет на пляже", who: "Tbachner", license: "CC BY 3.0", url: "https://commons.wikimedia.org/wiki/File:Lykien_Cirali_Strand.jpg" }
+  - { what: "Мраморное море вечером", who: "Mobina iz", license: "CC BY-SA 4.0", url: "https://commons.wikimedia.org/wiki/File:Istanbul_sky2.jpg" }
   - { what: "Море у Эскихисара", who: "Kadı Kadı", license: "CC BY-SA 2.0", url: "https://commons.wikimedia.org/wiki/File:Eskihisar,_Gebze_(15072023).jpg" }
+  - { what: "Берег Эскихисара", who: "Kadı Kadı", license: "CC BY-SA 2.0", url: "https://commons.wikimedia.org/wiki/File:Eskihisar,_Gebze_(15072023)_-_53047562058.jpg" }
+  - { what: "Набережная в Тузле (кадр обрезан)", who: "Erol Akbulut", license: "CC BY 3.0", url: "https://commons.wikimedia.org/wiki/File:EROL_AKBULUT_TUZLA_SAH%C4%B0L_-_panoramio.jpg" }
   - { what: "Аллея в Тузле (кадр обрезан)", who: "Erol Akbulut", license: "CC BY 3.0", url: "https://commons.wikimedia.org/wiki/File:TUZLA_-_panoramio_(2).jpg" }
   - { what: "Закат сквозь сосны", who: "Nika565656", license: "CC BY-SA 4.0", url: "https://commons.wikimedia.org/wiki/File:%C4%B0mage_565656.jpg" }
   - { what: "Elite Hotel Darıca", who: "Elite Hotels", license: "с согласия отеля", url: "https://elitehotels.com.tr/elite_darica" }
@@ -165,3 +168,7 @@ photo_credits:
 others:
   title: "Другие встречи с Мастером"
   text: "У Мастера проходят регулярные практики онлайн по понедельникам и четвергам с 18:00 до 20:00 мск, а также открытые ретриты онлайн и офлайн в Алании и Стамбуле."
+  # К кому обращаться по этим встречам (сторона Мастера). Пусто — кнопка ведёт к организатору из блока contacts.
+  contact_text: "Расписание и запись на эти встречи — у Изольды."
+  contact_button: "Написать Изольде в Telegram"
+  contact_telegram: "izoldaumarova"   # без @

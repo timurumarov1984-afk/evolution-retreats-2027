@@ -1,6 +1,6 @@
 ---
 # Одна встреча = один файл. Подсказки по всем полям — в файле cirali-spring-2027.md.
-title: "Интенсив в Ясном Поле"
+title: "Интенсив в Ясно Поле"      # название места не склоняется: «в Ясно Поле»
 kind: intensive
 season: "Сентябрь"
 place: "Ясно Поле, Тульская область"
@@ -27,8 +27,8 @@ collage: yasno-pole-2026        # коллаж «Как это было» — _d
 og_image: "/assets/img/og-yasno-pole.jpg"
 gallery:
   - { src: "/assets/media/yasno-pole-2026/cover.webp", small: "/assets/media/yasno-pole-2026/cover-800.webp", alt: "Поле на закате" }
-  - { src: "/assets/img/yasno-dome.webp", small: "/assets/img/yasno-dome-720.webp", alt: "Купольный дом в Ясном Поле вечером" }
-  - { src: "/assets/img/yasno-house.webp", small: "/assets/img/yasno-house-720.webp", alt: "Дома и оранжерея Ясного Поля" }
+  - { src: "/assets/img/yasno-dome.webp", small: "/assets/img/yasno-dome-720.webp", alt: "Купольный дом в Ясно Поле вечером" }
+  - { src: "/assets/img/yasno-house.webp", small: "/assets/img/yasno-house-720.webp", alt: "Дома и оранжерея в Ясно Поле" }
   - { src: "/assets/img/yasno-sign.webp", small: "/assets/img/yasno-sign-720.webp", alt: "Надпись «Ясно Поле» в поле" }
 
 schedule_title: "Расписание"

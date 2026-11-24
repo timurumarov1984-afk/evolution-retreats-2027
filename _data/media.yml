@@ -15,7 +15,7 @@ yasno-pole-2026:
   caption: "Ясно Поле, интенсив с Мастером · сентябрь 2026"
   items:
     - { video: grass, size: tall, alt: "Золотая трава на закате" }
-    - { video: hall, size: hero, alt: "Встреча с Мастером в зале Ясного Поля", label: "Встреча с Мастером", pos: "35% 50%" }
+    - { video: hall, size: hero, alt: "Встреча с Мастером в Ясно Поле, в зале", label: "Встреча с Мастером", pos: "35% 50%" }
     - { video: pond, size: tall, alt: "Солнце над прудом" }
     - { photo: hay, alt: "Тюк сена с табличкой «С нами всё ясно»" }
     - { photo: pier, alt: "Мостки на пруду" }

@@ -10,6 +10,21 @@
   var isPast = function (end) { var d = parse(end); return d && d < today; };
   var money = function (v, c) { return String(v).replace(/\B(?=(\d{3})+(?!\d))/g, ' ') + ' ' + c; };
 
+  /* 0. Фото не загрузилось (сбой связи на телефоне): пробуем ещё два раза, чтобы не оставалась пустая карточка */
+  function retryImg(im) {
+    var n = +(im.dataset.retry || 0), src = im.getAttribute('src') || '';
+    if (n >= 2 || !src || src.indexOf('data:') === 0) return;
+    im.dataset.retry = n + 1;
+    var again = function (u) { return u.split('?')[0] + '?r=' + (n + 1); };   // новый адрес — чтобы телефон не взял неудачную попытку из памяти
+    setTimeout(function () {
+      var set = im.getAttribute('srcset');
+      if (set) im.setAttribute('srcset', set.split(',').map(function (c) { var p = c.trim().split(/\s+/); p[0] = again(p[0]); return p.join(' '); }).join(', '));
+      im.setAttribute('src', again(src));
+    }, 1500 * (n + 1));
+  }
+  document.addEventListener('error', function (e) { if (e.target && e.target.tagName === 'IMG') retryImg(e.target); }, true);
+  $$('img').forEach(function (im) { if (im.complete && im.getAttribute('src') && im.naturalWidth === 0) retryImg(im); });   // не загрузились ещё до запуска этого файла
+
   /* 1. Прошедшие встречи: подпись «Встреча прошла», в конец списка, нет в анкете */
   $$('.ev[data-end]').forEach(function (card) {
     if (!isPast(card.dataset.end)) return;

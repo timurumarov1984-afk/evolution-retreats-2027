@@ -21,18 +21,22 @@ audience: all                 # all — открыт для всех · evolutio
 
 summary: "Впервые в Стамбуле трёхдневный ретрит выходного дня. Возможность начать год с глубокого погружения в практику и внутренней перезагрузки."
 
-# Обложка — вид на море с балкона отеля (официальное фото отеля).
-photo: "/assets/media/istanbul/hotel-balcony-sea.webp"
-photo_small: "/assets/media/istanbul/hotel-balcony-sea-800.webp"
-photo_pos: "22% 45%"
+# Обложка — Мраморное море вечером (Wikimedia Commons). Организаторы попросили оставить её, а фото отеля показывать внутри страницы.
+photo: "/assets/media/istanbul/marmara-evening.webp"
+photo_small: "/assets/media/istanbul/marmara-evening-800.webp"
+photo_pos: "50% 62%"
 og_image: "/assets/img/og-istanbul-january.jpg"
-# Галерея — официальные фото самого отеля, с согласия отеля (откуда взяты — в assets/media/СОСТАВ.md).
+# Галерея — официальные фото самого отеля, с согласия отеля (откуда взяты — в assets/media/СОСТАВ.md),
+# и в конце два вида моря по соседству (Wikimedia Commons, авторы подписаны в подвале сайта).
 gallery:
+  - { src: "/assets/media/istanbul/hotel-balcony-sea.webp", small: "/assets/media/istanbul/hotel-balcony-sea-800.webp", alt: "Вид на море с балкона отеля" }
   - { src: "/assets/media/istanbul/hotel-terrace.webp", small: "/assets/media/istanbul/hotel-terrace-800.webp", alt: "Терраса отеля над морем на закате" }
   - { src: "/assets/media/istanbul/hotel-exterior.webp", small: "/assets/media/istanbul/hotel-exterior-800.webp", alt: "Elite Hotel Darıca" }
   - { src: "/assets/media/istanbul/hotel-room-sea.webp", small: "/assets/media/istanbul/hotel-room-sea-800.webp", alt: "Номер с видом на море" }
   - { src: "/assets/media/istanbul/hotel-window-sea.webp", small: "/assets/media/istanbul/hotel-window-sea-800.webp", alt: "Море из окна номера" }
   - { src: "/assets/media/istanbul/hotel-seafront.webp", small: "/assets/media/istanbul/hotel-seafront-800.webp", alt: "Приморский парк и море перед отелем" }
+  - { src: "/assets/media/istanbul/eskihisar-coast.webp", small: "/assets/media/istanbul/eskihisar-coast-800.webp", alt: "Берег Мраморного моря неподалёку, в Эскихисаре" }
+  - { src: "/assets/media/istanbul/tuzla-promenade.webp", small: "/assets/media/istanbul/tuzla-promenade-800.webp", alt: "Набережная в соседней Тузле" }
 
 schedule_title: "Расписание"
 schedule:
@@ -50,7 +54,7 @@ stay_text: |
   Отель предоставляет специальные условия для нашей группы. Подробности о стоимости проживания сообщим при регистрации.
 
 travel_text: |
-  Отель находится в городе Дарыджа на берегу Мраморного моря, к востоку от Стамбула. Ближайший аэропорт — Стамбул имени Сабихи Гёкчен (SAW): около 30 км, примерно полчаса на машине. От аэропорта Стамбула (IST) дорога заметно дольше, поэтому билеты удобнее брать до Сабихи Гёкчен.
+  Отель находится в районе Дарыджа на берегу Мраморного моря, к востоку от Стамбула. Ближайший аэропорт — Стамбул имени Сабихи Гёкчен (SAW): около 30 км, примерно полчаса на машине. От аэропорта Стамбула (IST) дорога заметно дольше, поэтому билеты удобнее брать до Сабихи Гёкчен.
 
   Адрес: Cami Mah., Öğretmen Zatiye Çelemen Sok. No: 16, Darıca, Kocaeli. [Открыть на карте](https://www.google.com/maps/search/?api=1&query=Elite+Hotel+Dar%C4%B1ca+Kocaeli)
 faq: []

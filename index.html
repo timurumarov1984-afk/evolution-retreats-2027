@@ -122,9 +122,16 @@ body_class: home
   <div class="wrap narrow">
     <h2 id="others-h" class="h-accent">{% include tx.html s=S.others.title %}</h2>
     <p>{% include tx.html s=S.others.text %}</p>
+    {%- if S.others.contact_text and S.others.contact_text != "" %}
+    <p>{% include tx.html s=S.others.contact_text %}</p>
+    {%- endif %}
     <p class="others-actions">
       {%- if S.master_platform_url != "" %}<a class="btn" href="{{ S.master_platform_url }}" target="_blank" rel="noopener">Все встречи на платформе Мастера</a>{% endif %}
+      {%- if S.others.contact_telegram and S.others.contact_telegram != "" %}
+      <a class="btn btn-ghost" href="https://t.me/{{ S.others.contact_telegram }}" target="_blank" rel="noopener">{{ S.others.contact_button | default: "Написать в Telegram" }}</a>
+      {%- else %}
       <a class="btn btn-ghost" href="https://t.me/{{ S.contacts.telegram }}" target="_blank" rel="noopener">Написать @{{ S.contacts.telegram }}</a>
+      {%- endif %}
     </p>
   </div>
 </section>

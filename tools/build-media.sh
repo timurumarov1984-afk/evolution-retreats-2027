@@ -98,7 +98,7 @@ cirali() {
 
 # Стамбул: фото с Wikimedia Commons (свободные лицензии, авторы — в _data/site.yml → photo_credits).
 # Исходники скачаны в ~/.cache/evo-tools/istanbul/ (оригиналы с Commons; что откуда — в assets/media/СОСТАВ.md).
-# На страницах — спокойные виды на море в районе Тузлы и Гебзе. Городские фото (мечети, паром) лежат в запасе.
+# На страницах — спокойные виды на море: вечернее Мраморное море (обложка января), Тузла и Гебзе. Городские фото (мечети, паром) лежат в запасе.
 istanbul() {
   echo "Стамбул (Wikimedia Commons и фото отеля)"
   local I="$CACHE/istanbul" O="istanbul" spec n c
@@ -111,7 +111,7 @@ istanbul() {
     still "$I/$n.jpg" - "$O/$n"     "$c" 1600 "null" 80
     still "$I/$n.jpg" - "$O/$n-800" "$c" 800  "null" 78
   done
-  # Elite Hotel Darıca (январский интенсив) — официальные фото отеля, с согласия отеля.
+  # Elite Hotel Darıca (январский интенсив) — официальные фото отеля, с согласия отеля. Идут в галерею «Место проведения».
   # Взяты в полном размере (2000 px) со страницы отеля на Trip.com: на сайте самого отеля те же кадры выложены мелкими.
   # имя|кадрирование под 3:2|ширина большого файла. Рядом кладётся «-800» для галереи.
   local w
@@ -123,7 +123,7 @@ istanbul() {
     still "$I/$n.jpg" - "$O/$n-800" "$c" 800  "null" 78
   done
   # Превью ссылок двух стамбульских интенсивов (январь и август)
-  ffmpeg -v error -y -i "$I/hotel-balcony-sea.jpg" -vf "scale=1200:-2,crop=1200:630:0:(ih-630)*0.45" -q:v 3 "$ROOT/assets/img/og-istanbul-january.jpg"
+  ffmpeg -v error -y -i "$I/marmara-evening.jpg" -vf "scale=1200:-2,crop=1200:630:0:(ih-630)*0.62" -q:v 3 "$ROOT/assets/img/og-istanbul-january.jpg"
   ffmpeg -v error -y -i "$I/eskihisar-sea.jpg" -vf "scale=1200:-2,crop=1200:630:0:(ih-630)*0.45" -q:v 3 "$ROOT/assets/img/og-istanbul-august.jpg"
 }
 
