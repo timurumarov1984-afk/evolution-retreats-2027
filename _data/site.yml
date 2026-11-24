@@ -157,7 +157,6 @@ form:
 photo_credits:
   - { what: "Чиралы, побережье", who: "Alexey Komarov", license: "CC BY-SA 4.0", url: "https://commons.wikimedia.org/wiki/File:%C3%87%C4%B1ral%C4%B1_beach_2021-11-14-1.jpg" }
   - { what: "Чиралы, рассвет на пляже", who: "Tbachner", license: "CC BY 3.0", url: "https://commons.wikimedia.org/wiki/File:Lykien_Cirali_Strand.jpg" }
-  - { what: "Мраморное море вечером", who: "Mobina iz", license: "CC BY-SA 4.0", url: "https://commons.wikimedia.org/wiki/File:Istanbul_sky2.jpg" }
   - { what: "Море у Эскихисара", who: "Kadı Kadı", license: "CC BY-SA 2.0", url: "https://commons.wikimedia.org/wiki/File:Eskihisar,_Gebze_(15072023).jpg" }
   - { what: "Аллея в Тузле (кадр обрезан)", who: "Erol Akbulut", license: "CC BY 3.0", url: "https://commons.wikimedia.org/wiki/File:TUZLA_-_panoramio_(2).jpg" }
   - { what: "Закат сквозь сосны", who: "Nika565656", license: "CC BY-SA 4.0", url: "https://commons.wikimedia.org/wiki/File:%C4%B0mage_565656.jpg" }

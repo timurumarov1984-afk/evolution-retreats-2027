@@ -21,13 +21,13 @@ audience: all                 # all — открыт для всех · evolutio
 
 summary: "Впервые в Стамбуле трёхдневный ретрит выходного дня. Возможность начать год с глубокого погружения в практику и внутренней перезагрузки."
 
-photo: "/assets/media/istanbul/marmara-evening.webp"
-photo_small: "/assets/media/istanbul/marmara-evening-800.webp"
-photo_pos: "50% 62%"
+# Обложка — вид на море с балкона отеля (официальное фото отеля).
+photo: "/assets/media/istanbul/hotel-balcony-sea.webp"
+photo_small: "/assets/media/istanbul/hotel-balcony-sea-800.webp"
+photo_pos: "22% 45%"
 og_image: "/assets/img/og-istanbul-january.jpg"
 # Галерея — официальные фото самого отеля, с согласия отеля (откуда взяты — в assets/media/СОСТАВ.md).
 gallery:
-  - { src: "/assets/media/istanbul/hotel-balcony-sea.webp", small: "/assets/media/istanbul/hotel-balcony-sea-800.webp", alt: "Вид с балкона: Мраморное море и набережная" }
   - { src: "/assets/media/istanbul/hotel-terrace.webp", small: "/assets/media/istanbul/hotel-terrace-800.webp", alt: "Терраса отеля над морем на закате" }
   - { src: "/assets/media/istanbul/hotel-exterior.webp", small: "/assets/media/istanbul/hotel-exterior-800.webp", alt: "Elite Hotel Darıca" }
   - { src: "/assets/media/istanbul/hotel-room-sea.webp", small: "/assets/media/istanbul/hotel-room-sea-800.webp", alt: "Номер с видом на море" }

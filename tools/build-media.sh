@@ -123,7 +123,7 @@ istanbul() {
     still "$I/$n.jpg" - "$O/$n-800" "$c" 800  "null" 78
   done
   # Превью ссылок двух стамбульских интенсивов (январь и август)
-  ffmpeg -v error -y -i "$I/marmara-evening.jpg" -vf "scale=1200:-2,crop=1200:630:0:(ih-630)*0.62" -q:v 3 "$ROOT/assets/img/og-istanbul-january.jpg"
+  ffmpeg -v error -y -i "$I/hotel-balcony-sea.jpg" -vf "scale=1200:-2,crop=1200:630:0:(ih-630)*0.45" -q:v 3 "$ROOT/assets/img/og-istanbul-january.jpg"
   ffmpeg -v error -y -i "$I/eskihisar-sea.jpg" -vf "scale=1200:-2,crop=1200:630:0:(ih-630)*0.45" -q:v 3 "$ROOT/assets/img/og-istanbul-august.jpg"
 }
 
